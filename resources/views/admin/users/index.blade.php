@@ -1,8 +1,11 @@
-@extends('admin.layouts.user')
+@extends('admin.layout')
+
+@section('title', 'Users Management')
+
+@section('page-title', 'Users')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="m-0 text-dark">Users</h1>
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-2">Create User</a>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

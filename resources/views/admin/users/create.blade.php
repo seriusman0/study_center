@@ -1,8 +1,11 @@
-@extends('admin.layouts.user')
+@extends('admin.layout')
+
+@section('title', 'Create User')
+
+@section('page-title', 'Create User')
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="m-0 text-dark">Create User</h1>
     <form action="{{ route('admin.users.store') }}" method="POST">
         @csrf
         <div class="form-group">

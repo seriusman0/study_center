@@ -1,28 +1,31 @@
 @extends('admin.layout')
 
+@section('title', 'Edit User')
+
+@section('page-title', 'Edit User')
+
 @section('content')
 <div class="container-fluid">
-    <h1 class="m-0 text-dark">Edit User</h1>
     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">
             <label for="nama">Nama:</label>
-            <input type="text" class="form-control" name="nama" value="{{ $user->nama }}" required>
+            <input type="text" class="form-control" name="nama" value="{{ old('nama', $user->nama) }}" required>
             @error('nama')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="nip">NIP:</label>
-            <input type="text" class="form-control" name="nip" value="{{ $user->nip }}" required>
+            <input type="text" class="form-control" name="nip" value="{{ old('nip', $user->nip) }}" required>
             @error('nip')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" class="form-control" name="username" value="{{ $user->username }}" required>
+            <input type="text" class="form-control" name="username" value="{{ old('username', $user->username) }}" required>
             @error('username')
                 <span class="text-danger">{{ $message }}</span>
             @enderror

@@ -1,8 +1,11 @@
 @extends('admin.layout')
 
+@section('title', 'User Details')
+
+@section('page-title', 'User Details')
+
 @section('content')
 <div class="container-fluid">
-    <h1 class="m-0 text-dark">User Details</h1>
     <table class="table table-bordered">
         <tr>
             <th>Nama</th>
@@ -25,3 +28,6 @@
             <td>{{ $user->updated_at }}</td>
         </tr>
     </table>
+    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Back to Users</a>
+</div>
+@endsection
