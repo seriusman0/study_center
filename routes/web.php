@@ -14,6 +14,7 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
-        // Tambahkan route admin lainnya di sini
+        Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
+  
     });
 });
