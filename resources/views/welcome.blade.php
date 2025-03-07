@@ -131,6 +131,58 @@
             height: 300px;
             margin-bottom: 20px;
         }
+        .form-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+        .btn-primary {
+            background-color: #FFA500;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #e59400;
+        }
+        .alert {
+            padding: 10px;
+            margin-top: 15px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -139,6 +191,22 @@
             <div class="shape circle"></div>
             <div class="shape square"></div>
             <div class="shape triangle"></div>
+        </div>
+
+        <div class="container mt-5">
+            {{-- Form untuk pencarian berdasarkan NIM --}}
+            <div class="form-container">
+                <form action="{{ route('files.search') }}" method="GET" class="mb-4">
+                    <div class="form-group">
+                        <label for="nip">NIP:</label>
+                        <input type="number" class="form-control" id="nip" name="nip" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Search</button>
+                </form>
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+            </div>
         </div>
         <h1>Selamat Datang di Study Center!</h1>
         <div id="lottie-animation"></div>
