@@ -144,15 +144,15 @@
                         <h4 class="mb-0">Login Siswa</h4>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="login-card p-4 text-center" 
-                         onclick="window.location.href='{{ route('admin.login') }}'">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3048/3048122.png" 
-                             alt="Admin" 
-                             class="login-icon mb-3">
-                        <h4 class="mb-0">Login Admin</h4>
-                    </div>
-                </div>
+              <div class="col-md-4">
+                  <div class="login-card p-4 text-center" 
+                       onclick="window.location.href='{{ route('admin.login') }}'">
+                      <img src="https://cdn-icons-png.flaticon.com/512/3048/3048122.png" 
+                           alt="Admin" 
+                           class="login-icon mb-3">
+                      <h4 class="mb-0">Login Admin</h4>
+                  </div>
+              </div>
             </div>
         </div>
     </div>
