@@ -19,6 +19,7 @@ class User extends Authenticatable
         'nip',
         'username',
         'password',
+        'batch_id', // Tambahkan batch_id ke fillable
     ];
 
     /**
@@ -36,4 +37,12 @@ class User extends Authenticatable
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Relationship with Batch.
+     */
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
 }
