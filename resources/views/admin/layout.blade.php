@@ -55,26 +55,128 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Dashboard -->
           <li class="nav-item">
-            <a href="/admin/users" class="nav-link">
-              <i class="nav-icon fas fa-users"></i>
-              <p>User</p>
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>Dashboard</p>
             </a>
           </li>
+
+          <!-- Beasiswa Management -->
           <li class="nav-item">
-            <a href="/admin/admins" class="nav-link">
+            <a href="{{ route('admin.scholarships.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-graduation-cap"></i>
+              <p>Beasiswa SCGS</p>
+            </a>
+          </li>
+
+          <!-- Kehadiran -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-calendar-check"></i>
+              <p>
+                Kehadiran
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.attendance.regular') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Regular</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.attendance.css') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>CSS</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.attendance.cgg') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>CGG</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Jurnal -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Jurnal Siswa
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.journals.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Daftar Jurnal</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.journals.statistics') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Statistik</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Data Management -->
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-database"></i>
+              <p>
+                Data Master
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ route('admin.users.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Siswa</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Kelas</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Batch</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- File Management -->
+          <li class="nav-item">
+            <a href="{{ route('admin.files.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-file-alt"></i>
+              <p>File Management</p>
+            </a>
+          </li>
+
+          <!-- Admin Management -->
+          <li class="nav-item">
+            <a href="{{ route('admin.admins.index') }}" class="nav-link">
               <i class="nav-icon fas fa-user-shield"></i>
               <p>Admin</p>
             </a>
           </li>
+
+          <!-- Settings -->
           <li class="nav-item">
-            <a href="/admin/files" class="nav-link">
-              <i class="nav-icon fas fa-file"></i>
-              <p>File</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="/admin/settings" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cogs"></i>
               <p>Pengaturan</p>
             </a>

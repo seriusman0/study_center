@@ -9,47 +9,131 @@ class User extends Authenticatable
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'nama',
         'nip',
         'username',
         'password',
-        'batch_id', // Tambahkan batch_id ke fillable
+        'batch_id',
+        'gender',
+        'kelas'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
     ];
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
     /**
-     * Relationship with Batch.
+     * Relationship with Batch
      */
     public function batch()
     {
         return $this->belongsTo(Batch::class);
     }
-    public function studentDetail()    {        
-        return $this->hasOne(
-            StudentDetail::class);    
+
+    /**
+     * Relationship with StudentDetail
+     */
+    public function studentDetail()
+    {
+        return $this->hasOne(StudentDetail::class);
+    }
+
+    /**
+     * Relationship with FamilyMembers
+     */
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class);
+    }
+
+    /**
+     * Relationship with AttendanceRecord
+     */
+    public function attendanceRecord()
+    {
+        return $this->hasOne(AttendanceRecord::class);
+    }
+
+    /**
+     * Relationship with Journals
+     */
+    public function journals()
+    {
+        return $this->hasMany(Journal::class);
+    }
+
+    /**
+     * Relationship with Scholarship
+     */
+    public function scholarship()
+    {
+        return $this->hasOne(Scholarship::class);
+    }
+
+    /**
+     * Get parent information
+     */
+    public function getParents()
+    {
+        return $this->familyMembers()
+            ->whereIn('member_type', ['father', 'mother'])
+            ->get();
+    }
+
+    /**
+     * Get siblings information
+     */
+    public function getSiblings()
+    {
+        return $this->familyMembers()
+            ->where('member_type', 'sibling')
+            ->get();
+    }
+
+    /**
+     * Check if student meets scholarship criteria
+     */
+    public function checkScholarshipEligibility()
+    {
+        if (!$this->attendanceRecord) {
+            return false;
         }
-        public function familyMembers()    {        
-            return $this->hasMany(FamilyMember::class)
-            ;    }
+
+        return $this->attendanceRecord->meetsMinimumAttendance();
+    }
+
+    /**
+     * Get journal submission rate
+     */
+    public function getJournalSubmissionRate($startDate, $endDate)
+    {
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+        $submittedCount = $this->journals()
+            ->whereBetween('entry_date', [$startDate, $endDate])
+            ->where('is_submitted', true)
+            ->count();
+
+        return $totalDays > 0 ? ($submittedCount / $totalDays) * 100 : 0;
+    }
+
+    /**
+     * Scope for active students
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereHas('studentDetail', function ($q) {
+            $q->where('is_active', true);
+        });
+    }
+
+    /**
+     * Scope for students by class level
+     */
+    public function scopeInClass($query, $class)
+    {
+        return $query->where('kelas', $class);
+    }
 }
