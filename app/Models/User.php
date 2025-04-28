@@ -45,4 +45,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Batch::class);
     }
+    public function studentDetail()    {        
+        return $this->hasOne(
+            StudentDetail::class);    
+        }
+        public function familyMembers()    {        
+            return $this->hasMany(FamilyMember::class)
+            ;    }
 }
