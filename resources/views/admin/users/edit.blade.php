@@ -279,45 +279,8 @@
                             </div>
                         </div>
 
-                        <!-- Siblings -->
-                        <div class="siblings-container">
-                            <h5 class="mt-3">Siblings</h5>
-                            @php
-                                $siblings = $user->familyMembers->where('member_type', 'Sibling');
-                                $siblingCount = max(1, $siblings->count());
-                            @endphp
-                            
-                            @for($i = 0; $i < $siblingCount; $i++)
-                                <div class="row sibling-row">
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label for="sibling_names[{{$i}}]">Nama Saudara</label>
-                                            <input type="text" class="form-control @error('sibling_names.'.$i) is-invalid @enderror" 
-                                                name="sibling_names[]" value="{{ old('sibling_names.'.$i, $siblings[$i]->nama ?? '') }}">
-                                            @error('sibling_names.'.$i)
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label for="sibling_ids[{{$i}}]">ID Saudara</label>
-                                            <input type="text" class="form-control @error('sibling_ids.'.$i) is-invalid @enderror" 
-                                                name="sibling_ids[]" value="{{ old('sibling_ids.'.$i, $siblings[$i]->member_id ?? '') }}">
-                                            @error('sibling_ids.'.$i)
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-end">
-                                        @if($i > 0)
-                                            <button type="button" class="btn btn-danger mb-3 remove-sibling">Remove</button>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endfor
-                        </div>
-                        <button type="button" class="btn btn-success mt-2" id="add-sibling">Add Sibling</button>
+                        <!-- Siblings (Livewire Component) -->
+                        @livewire('user-siblings', ['user' => $user])
                     </div>
                 </div>
 

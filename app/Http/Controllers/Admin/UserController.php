@@ -86,8 +86,6 @@ class UserController extends Controller
             'father_id' => 'nullable|string|max:255',
             'mother_name' => 'required|string|max:255',
             'mother_id' => 'nullable|string|max:255',
-            'sibling_names.*' => 'nullable|string|max:255',
-            'sibling_ids.*' => 'nullable|string|max:255',
         ]);
 
         // Update user basic info
@@ -135,22 +133,6 @@ class UserController extends Controller
             ]
         );
 
-        // Update siblings information
-        if (isset($validatedData['sibling_names'])) {
-            // Remove existing siblings
-            $user->familyMembers()->where('member_type', 'Sibling')->delete();
-            
-            // Add new siblings
-            foreach ($validatedData['sibling_names'] as $key => $name) {
-                if (!empty($name)) {
-                    $user->familyMembers()->create([
-                        'member_type' => 'Sibling',
-                        'nama' => $name,
-                        'member_id' => $validatedData['sibling_ids'][$key] ?? null,
-                    ]);
-                }
-            }
-        }
 
         return redirect()->route('admin.users.index')->with('success', 'User and related information updated successfully.');
     }

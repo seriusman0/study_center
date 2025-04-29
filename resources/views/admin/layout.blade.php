@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="{{ asset('assets/admin/plugins/ionicons/ionicons.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+  @livewireStyles
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -218,5 +219,6 @@
 <script src="{{ asset('assets/admin/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('assets/admin/dist/js/adminlte.min.js') }}"></script>
+@livewireScripts
 </body>
 </html>
