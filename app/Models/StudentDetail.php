@@ -14,6 +14,13 @@ class StudentDetail extends Model
         'sekolah',
         'spp',
         'no_rekening',
+        'nama_bank',
+        'cabang_bank',
+        'pemilik_rekening',
+        'tingkat_kelas',
+        'tahun_ajaran',
+        'nominal_spp_default',
+        'is_active'
     ];
 
     /**

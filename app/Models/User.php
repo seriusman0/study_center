@@ -16,7 +16,8 @@ class User extends Authenticatable
         'password',
         'batch_id',
         'gender',
-        'kelas'
+        'class_id',
+        'avatar'
     ];
 
     protected $hidden = [
@@ -31,6 +32,11 @@ class User extends Authenticatable
     public function batch()
     {
         return $this->belongsTo(Batch::class);
+    }
+
+    public function class()
+    {
+        return $this->belongsTo(ClassRoom::class, 'class_id');
     }
 
     /**
@@ -89,8 +95,28 @@ class User extends Authenticatable
     public function getSiblings()
     {
         return $this->familyMembers()
-            ->where('member_type', 'sibling')
+            ->where('member_type', 'Sibling')
             ->get();
+    }
+
+    /**
+     * Get father information
+     */
+    public function getFather()
+    {
+        return $this->familyMembers()
+            ->where('member_type', 'Father')
+            ->first();
+    }
+
+    /**
+     * Get mother information
+     */
+    public function getMother()
+    {
+        return $this->familyMembers()
+            ->where('member_type', 'Mother')
+            ->first();
     }
 
     /**
@@ -130,10 +156,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope for students by class level
+     * Scope for students by class
      */
-    public function scopeInClass($query, $class)
+    public function scopeInClass($query, $classId)
     {
-        return $query->where('kelas', $class);
+        return $query->where('class_id', $classId);
     }
 }

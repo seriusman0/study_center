@@ -15,6 +15,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
 
     Route::middleware(['auth:admin'])->group(function () {
+        // Settings Routes
+        Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings.index');
+        Route::put('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
         Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
         Route::resource('admins', App\Http\Controllers\Admin\AdminController::class)->names('admin.admins');
@@ -42,6 +46,12 @@ Route::prefix('admin')->group(function () {
         Route::resource('journals', App\Http\Controllers\Admin\JournalController::class)->names('admin.journals');
         Route::get('journals/statistics', [App\Http\Controllers\Admin\JournalController::class, 'statistics'])
             ->name('admin.journals.statistics');
+
+        // Batch Management Routes
+        Route::resource('batches', App\Http\Controllers\Admin\BatchController::class)->names('admin.batches');
+        
+        // Class Management Routes
+        Route::resource('classes', App\Http\Controllers\Admin\ClassController::class)->names('admin.classes');
 
 
 

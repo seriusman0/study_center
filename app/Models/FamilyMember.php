@@ -13,6 +13,7 @@ class FamilyMember extends Model
         'user_id',
         'member_type',
         'nama',
+        'member_id',
     ];
 
     /**

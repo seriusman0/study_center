@@ -45,7 +45,7 @@
     <div class="sidebar">
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="/assets/public/logo/user_profile.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ Auth::guard('admin')->user()->avatar ? asset('storage/avatars/'.Auth::guard('admin')->user()->avatar) : asset('assets/public/logo/user_profile.jpg') }}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">{{ Auth::guard('admin')->user()->name }}</a>
@@ -144,13 +144,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.classes.index') }}" class="nav-link {{ Request::routeIs('admin.classes.*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Kelas</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.batches.index') }}" class="nav-link {{ Request::routeIs('admin.batches.*') ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Batch</p>
                 </a>
@@ -176,7 +176,7 @@
 
           <!-- Settings -->
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('admin.settings.index') }}" class="nav-link {{ Request::routeIs('admin.settings.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-cogs"></i>
               <p>Pengaturan</p>
             </a>

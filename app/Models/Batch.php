@@ -9,13 +9,23 @@ class Batch extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name'
+    ];
 
     /**
-     * Relationship with User.
+     * Get the users in this batch.
      */
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get the number of users in this batch.
+     */
+    public function getUsersCountAttribute()
+    {
+        return $this->users()->count();
     }
 }
