@@ -6,7 +6,12 @@
 
 @section('content')
 <div class="container-fluid">
-    <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-2">Create User</a>
+    <div class="mb-2">
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create User</a>
+        <a href="{{ route('admin.students.bulk-import') }}" class="btn btn-success ml-2">
+            <i class="fas fa-upload"></i> Bulk Import Students
+        </a>
+    </div>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif

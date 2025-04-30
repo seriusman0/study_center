@@ -21,6 +21,11 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
         Route::resource('users', App\Http\Controllers\Admin\UserController::class)->names('admin.users');
+        
+        // Student Bulk Import Routes
+        Route::get('students/bulk-import', [App\Http\Controllers\Admin\StudentBulkImportController::class, 'index'])->name('admin.students.bulk-import');
+        Route::get('students/bulk-import/template', [App\Http\Controllers\Admin\StudentBulkImportController::class, 'downloadTemplate'])->name('admin.students.bulk-import.template');
+        Route::post('students/bulk-import', [App\Http\Controllers\Admin\StudentBulkImportController::class, 'import'])->name('admin.students.bulk-import.process');
         Route::resource('admins', App\Http\Controllers\Admin\AdminController::class)->names('admin.admins');
         Route::resource('files', App\Http\Controllers\Admin\FileController::class)->names('admin.files');
         Route::get('files/{file}/view', [App\Http\Controllers\Admin\FileController::class, 'view'])->name('admin.files.view');
