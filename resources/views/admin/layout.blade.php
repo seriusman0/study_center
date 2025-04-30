@@ -83,6 +83,12 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
+                <a href="{{ route('admin.attendance.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Overview</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ route('admin.attendance.regular') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Regular</p>
@@ -98,6 +104,12 @@
                 <a href="{{ route('admin.attendance.cgg') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>CGG</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.attendance.import') }}" class="nav-link">
+                  <i class="fas fa-upload nav-icon"></i>
+                  <p>Import Data</p>
                 </a>
               </li>
             </ul>

@@ -15,29 +15,21 @@ class AttendanceRecord extends Model
         'css_attendance',
         'cgg_attendance',
         'total_sessions',
-        'attendance_percentage',
-        'excused_absences'
+        'excused_absences',
+        'journal_entry',
+        'permission',
+        'spr_father',
+        'spr_mother',
+        'spr_sibling'
     ];
 
-    /**
-     * Calculate attendance percentage
-     */
-    public function calculateAttendancePercentage()
-    {
-        if ($this->total_sessions > 0) {
-            $total_attendance = $this->regular_attendance + $this->css_attendance + $this->cgg_attendance;
-            $this->attendance_percentage = ($total_attendance / ($this->total_sessions * 3)) * 100;
-            $this->save();
-        }
-    }
-
-    /**
-     * Check if attendance meets minimum requirement (75%)
-     */
-    public function meetsMinimumAttendance()
-    {
-        return $this->attendance_percentage >= 75;
-    }
+    protected $casts = [
+        'permission' => 'integer',
+        'spr_father' => 'integer',
+        'spr_mother' => 'integer',
+        'spr_sibling' => 'integer',
+        'journal_entry' => 'integer'
+    ];
 
     /**
      * Relationship with User

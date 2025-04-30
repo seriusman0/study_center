@@ -41,10 +41,16 @@ Route::prefix('admin')->group(function () {
 
         // Attendance Management Routes
         Route::prefix('attendance')->name('admin.attendance.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('index');
             Route::get('/regular', [App\Http\Controllers\Admin\AttendanceController::class, 'regular'])->name('regular');
             Route::get('/css', [App\Http\Controllers\Admin\AttendanceController::class, 'css'])->name('css');
             Route::get('/cgg', [App\Http\Controllers\Admin\AttendanceController::class, 'cgg'])->name('cgg');
             Route::put('/update/{user}', [App\Http\Controllers\Admin\AttendanceController::class, 'update'])->name('update');
+            
+            // Bulk Import Routes
+            Route::get('/import', [App\Http\Controllers\Admin\AttendanceController::class, 'showImport'])->name('import');
+            Route::post('/import', [App\Http\Controllers\Admin\AttendanceController::class, 'import'])->name('import.process');
+            Route::get('/template', [App\Http\Controllers\Admin\AttendanceController::class, 'downloadTemplate'])->name('template');
         });
 
         // Journal Management Routes
