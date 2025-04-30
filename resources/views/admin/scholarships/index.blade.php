@@ -1,16 +1,17 @@
 @extends('admin.layout')
 
 @section('content')
-<div class="content-wrapper">
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Manajemen Beasiswa SCGS</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Manajemen Beasiswa SCGS</h3>
                 </div>
-            </div>
-        </div>
-    </section>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <!-- Add your content here -->
+                    
 
     <section class="content">
         <div class="container-fluid">
@@ -117,7 +118,14 @@
             </div>
         </div>
     </section>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
 </div>
+
 @endsection
 
 @push('scripts')
