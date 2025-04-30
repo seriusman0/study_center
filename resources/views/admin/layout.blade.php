@@ -112,6 +112,12 @@
                   <p>Import Data</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('admin.permissions.index') }}" class="nav-link">
+                  <i class="fas fa-clock nav-icon"></i>
+                  <p>Permission Requests</p>
+                </a>
+              </li>
             </ul>
           </li>
 

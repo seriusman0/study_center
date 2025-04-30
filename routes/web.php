@@ -5,9 +5,30 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Student Routes
+Route::prefix('student')->name('student.')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Student\AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Student\AuthController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\Student\AuthController::class, 'logout'])->name('logout');
+
+    // Protected Student Routes
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Journal Routes
+        Route::resource('journals', App\Http\Controllers\Student\JournalController::class)->names('journals');
+        Route::post('journals/store-image', [App\Http\Controllers\Student\JournalController::class, 'storeImage'])
+            ->name('journals.store-image');
+        
+        // Permission Request Routes
+        Route::resource('permissions', App\Http\Controllers\Student\PermissionRequestController::class)
+            ->except(['edit', 'update'])
+            ->names('permissions');
+    });
+});
+
 Route::get('files/search', [App\Http\Controllers\Admin\FileController::class, 'search'])->name('files.search');
-
-
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -46,12 +67,15 @@ Route::prefix('admin')->group(function () {
             Route::get('/css', [App\Http\Controllers\Admin\AttendanceController::class, 'css'])->name('css');
             Route::get('/cgg', [App\Http\Controllers\Admin\AttendanceController::class, 'cgg'])->name('cgg');
             Route::put('/update/{user}', [App\Http\Controllers\Admin\AttendanceController::class, 'update'])->name('update');
-            
-            // Bulk Import Routes
             Route::get('/import', [App\Http\Controllers\Admin\AttendanceController::class, 'showImport'])->name('import');
             Route::post('/import', [App\Http\Controllers\Admin\AttendanceController::class, 'import'])->name('import.process');
             Route::get('/template', [App\Http\Controllers\Admin\AttendanceController::class, 'downloadTemplate'])->name('template');
         });
+
+        // Permission Request Management Routes
+        Route::resource('permissions', App\Http\Controllers\Admin\PermissionRequestController::class)
+            ->only(['index', 'show', 'update'])
+            ->names('admin.permissions');
 
         // Journal Management Routes
         Route::resource('journals', App\Http\Controllers\Admin\JournalController::class)->names('admin.journals');
@@ -63,9 +87,5 @@ Route::prefix('admin')->group(function () {
         
         // Class Management Routes
         Route::resource('classes', App\Http\Controllers\Admin\ClassController::class)->names('admin.classes');
-
-
-
-  
     });
 });

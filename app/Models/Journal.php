@@ -13,12 +13,28 @@ class Journal extends Model
         'user_id',
         'entry_date',
         'is_submitted',
-        'content'
+        'mengawali_hari_dengan_berdoa',
+        'baca_alkitab_pl',
+        'baca_alkitab_pb',
+        'hadir_kelas_sc',
+        'hadir_css',
+        'hadir_cgg',
+        'merapikan_tempat_tidur',
+        'menyapa_orang_tua',
+        'selfie_image'
     ];
 
     protected $casts = [
         'entry_date' => 'date',
-        'is_submitted' => 'boolean'
+        'is_submitted' => 'boolean',
+        'mengawali_hari_dengan_berdoa' => 'boolean',
+        'baca_alkitab_pl' => 'boolean',
+        'baca_alkitab_pb' => 'boolean',
+        'hadir_kelas_sc' => 'boolean',
+        'hadir_css' => 'boolean',
+        'hadir_cgg' => 'boolean',
+        'merapikan_tempat_tidur' => 'boolean',
+        'menyapa_orang_tua' => 'boolean'
     ];
 
     /**

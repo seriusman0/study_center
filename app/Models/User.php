@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasOne(AttendanceRecord::class);
     }
 
+    public function permissionRequests()
+    {
+        return $this->hasMany(PermissionRequest::class);
+    }
+
     /**
      * Relationship with Journals
      */
