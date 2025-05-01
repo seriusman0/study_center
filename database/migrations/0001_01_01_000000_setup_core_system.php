@@ -11,12 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('batches', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->timestamps();
-        });
-
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
@@ -24,14 +18,12 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->foreignId('batch_id')->nullable()->constrained('batches')->onDelete('set null');
             $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamps();
             
             $table->index('nama');
             $table->index('username');
-            $table->index('batch_id');
         });
 
         Schema::create('admins', function (Blueprint $table) {
@@ -63,6 +55,5 @@ return new class extends Migration
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('admins');
         Schema::dropIfExists('users');
-        Schema::dropIfExists('batches');
     }
 };

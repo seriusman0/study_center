@@ -20,7 +20,6 @@ class UserSeeder extends Seeder
             'username' => 'user1',
             'email' => 'user1@example.com',
             'password' => Hash::make('user1'),
-            'batch_id' => 1, // Default to first batch
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -41,7 +40,6 @@ class UserSeeder extends Seeder
         // Create attendance record for user 1
         DB::table('attendance_records')->insert([
             'user_id' => $userId1,
-            'class_id' => 1,
             'regular_attendance' => 0,
             'css_attendance' => 0,
             'cgg_attendance' => 0,
@@ -64,7 +62,6 @@ class UserSeeder extends Seeder
             'username' => 'user2',
             'email' => 'user2@example.com',
             'password' => Hash::make('user2'),
-            'batch_id' => 1, // Default to first batch
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -85,7 +82,6 @@ class UserSeeder extends Seeder
         // Create attendance record for user 2
         DB::table('attendance_records')->insert([
             'user_id' => $userId2,
-            'class_id' => 1,
             'regular_attendance' => 0,
             'css_attendance' => 0,
             'cgg_attendance' => 0,

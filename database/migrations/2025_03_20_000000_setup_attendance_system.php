@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('class_id')->nullable()->constrained()->onDelete('set null');
             
             // Attendance counts (using integers instead of booleans)
             $table->integer('regular_attendance')->default(0);
@@ -36,14 +35,12 @@ return new class extends Migration
 
             // Indexes for frequent queries
             $table->index('user_id');
-            $table->index('class_id');
             $table->index('record_date');
             $table->unique(['user_id', 'record_date']);
         });
 
         Schema::create('sessions_attendance', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('class_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->date('session_date');
             $table->time('start_time');
@@ -52,7 +49,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
 
-            $table->index('class_id');
             $table->index('session_date');
             $table->index('type');
         });

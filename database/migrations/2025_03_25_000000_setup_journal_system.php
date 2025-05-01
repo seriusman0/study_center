@@ -14,15 +14,17 @@ return new class extends Migration
         Schema::create('journals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('class_id')->nullable()->constrained()->onDelete('set null');
             
             // Structured journal fields
-            $table->text('activities_today')->nullable();
-            $table->text('learning_progress')->nullable();
-            $table->text('challenges_faced')->nullable();
-            $table->text('solutions_applied')->nullable();
-            $table->text('goals_tomorrow')->nullable();
-            $table->text('additional_notes')->nullable();
+            $table->boolean('mengawali_hari_dengan_berdoa')->default(false);
+            $table->boolean('baca_alkitab_pl')->default(false);
+            $table->boolean('baca_alkitab_pb')->default(false);
+            $table->boolean('hadir_kelas_sc')->default(false);
+            $table->boolean('hadir_css')->default(false);
+            $table->boolean('hadir_cgg')->default(false);
+            $table->boolean('merapikan_tempat_tidur')->default(false);
+            $table->boolean('menyapa_orang_tua')->default(false);
+            $table->boolean('is_submitted')->default(false);
             
             // Media
             $table->string('selfie_image')->nullable();
@@ -39,7 +41,6 @@ return new class extends Migration
 
             // Indexes
             $table->index('user_id');
-            $table->index('class_id');
             $table->index('entry_date');
             $table->index('status');
             $table->unique(['user_id', 'entry_date']);

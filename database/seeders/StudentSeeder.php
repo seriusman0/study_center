@@ -17,7 +17,6 @@ class StudentSeeder extends Seeder
             'username' => 'student',
             'email' => 'student@example.com',
             'password' => Hash::make('password'),
-            'batch_id' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -38,7 +37,6 @@ class StudentSeeder extends Seeder
         // Create attendance record
         DB::table('attendance_records')->insert([
             'user_id' => $userId,
-            'class_id' => 1,
             'regular_attendance' => 0,
             'css_attendance' => 0,
             'cgg_attendance' => 0,
