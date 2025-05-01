@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('class_type'); // Added class_type column
-            $table->string('title');
             $table->text('reason');
             $table->date('date'); // Added date column
             $table->string('attachment')->nullable(); // Added attachment column
@@ -23,6 +22,7 @@ return new class extends Migration
             $table->date('end_date')->nullable(); // Made end_date nullable
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('admin_notes')->nullable();
+            // Removed misplaced username column from permission_requests table
             $table->foreignId('reviewed_by')->nullable()->constrained('admins')->onDelete('set null');
             $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();
