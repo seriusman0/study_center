@@ -11,6 +11,7 @@ class StudentDetail extends Model
 
     protected $fillable = [
         'user_id',
+        'class_id',
         'sekolah',
         'spp',
         'no_rekening',
@@ -23,11 +24,23 @@ class StudentDetail extends Model
         'is_active'
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
     /**
      * Relationship with User.
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relationship with ClassRoom.
+     */
+    public function classRoom()
+    {
+        return $this->belongsTo(ClassRoom::class, 'class_id');
     }
 }

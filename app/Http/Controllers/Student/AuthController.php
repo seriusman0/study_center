@@ -26,7 +26,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::guard('web')->attempt($credentials)) {
+        if (Auth::guard('web')->attempt(['username' => $credentials['username'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
             return redirect()->intended(route('student.dashboard'));
         }

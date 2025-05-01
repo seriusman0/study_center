@@ -24,11 +24,18 @@ class ClassRoom extends Model
     ];
 
     /**
-     * Get the students in this class.
+     * Get the students in this class through student details.
      */
     public function students()
     {
-        return $this->hasMany(User::class, 'class_id');
+        return $this->hasManyThrough(
+            User::class,
+            StudentDetail::class,
+            'class_id', // Foreign key on student_details table
+            'id', // Foreign key on users table
+            'id', // Local key on classes table
+            'user_id' // Local key on student_details table
+        );
     }
 
     /**

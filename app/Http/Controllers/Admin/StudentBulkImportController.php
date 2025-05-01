@@ -35,7 +35,7 @@ class StudentBulkImportController extends Controller
         // Set headers
         $headers = [
             // User Information
-            'Nama*', 'NIP*', 'Username*', 'Gender*', 'Batch ID*', 'Class ID*',
+            'Nama*', 'NIP*', 'Username*', 'Email*', 'Gender*', 'Batch ID*', 'Class ID*',
             
             // Student Details
             'Sekolah*', 'SPP*', 'No Rekening*', 'Nama Bank*', 'Cabang Bank*', 
@@ -62,7 +62,7 @@ class StudentBulkImportController extends Controller
 
         // Add sample data
         $sampleData = [
-            'John Doe', '12345', 'johndoe', 'Male', '1', '1',
+            'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'Male', '1', '1',
             'SMA Negeri 1', '500000', '1234567890', 'BCA', 'Jakarta',
             'John Doe', '11', '2023/2024',
             'James Doe', 'Jane Doe',
@@ -120,13 +120,12 @@ class StudentBulkImportController extends Controller
                     }
 
                     // Validate required fields
-                    if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || 
-                        empty($row[4]) || empty($row[5])) {
+                    if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5]) || empty($row[6])) {
                         throw new \Exception("Required user fields are missing.");
                     }
 
                     // Validate gender
-                    if (!in_array(strtolower($row[3]), ['male', 'female'])) {
+                    if (!in_array(strtolower($row[4]), ['male', 'female'])) {
                         throw new \Exception("Invalid gender value. Must be 'Male' or 'Female'.");
                     }
 
@@ -136,10 +135,11 @@ class StudentBulkImportController extends Controller
                             'nama' => $row[0],
                             'nip' => $row[1],
                             'username' => $row[2],
+                            'email' => $row[3],
                             'password' => Hash::make(Str::random(8)), // Generate random password
-                            'gender' => ucfirst(strtolower($row[3])), // Normalize gender
-                            'batch_id' => $row[4],
-                            'class_id' => $row[5]
+                            'gender' => ucfirst(strtolower($row[4])), // Normalize gender
+                            'batch_id' => $row[5],
+                            'class_id' => $row[6]
                         ]);
                         $user->save();
                     } catch (\Exception $e) {

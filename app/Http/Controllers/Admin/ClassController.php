@@ -10,10 +10,12 @@ class ClassController extends Controller
 {
     public function index()
     {
-        $classes = ClassRoom::withCount('students')
+        $classes = ClassRoom::select('classes.*')
+            ->selectRaw('(SELECT COUNT(*) FROM student_details WHERE student_details.class_id = classes.id) as students_count')
             ->orderBy('level')
             ->orderBy('section')
             ->get();
+
         return view('admin.classes.index', compact('classes'));
     }
 
@@ -65,7 +67,9 @@ class ClassController extends Controller
 
     public function destroy(ClassRoom $class)
     {
-        if ($class->students()->count() > 0) {
+        $studentsCount = \App\Models\StudentDetail::where('class_id', $class->id)->count();
+        
+        if ($studentsCount > 0) {
             return redirect()->route('admin.classes.index')
                 ->with('error', 'Cannot delete class that has students assigned to it.');
         }

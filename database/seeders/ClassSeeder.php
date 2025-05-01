@@ -59,8 +59,15 @@ class ClassSeeder extends Seeder
 
         foreach ($classes as $class) {
             ClassRoom::updateOrCreate(
-                ['name' => $class['name'], 'academic_year' => $class['academic_year']],
-                $class
+                [
+                    'name' => $class['name'], 
+                    'academic_year' => $class['academic_year'],
+                    'code' => strtolower(str_replace(' ', '-', $class['name'])) . '-' . str_replace('/', '-', $class['academic_year'])
+                ],
+                array_merge($class, [
+                    'batch_id' => 1, // Default to first batch
+                    'code' => strtolower(str_replace(' ', '-', $class['name'])) . '-' . str_replace('/', '-', $class['academic_year'])
+                ])
             );
         }
     }

@@ -13,11 +13,92 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'nama' => 'User',
+        // Create user 1
+        $userId1 = DB::table('users')->insertGetId([
+            'nama' => 'User One',
             'nip' => '12345678',
-            'username' => 'user',
-            'password' => Hash::make('user'),
+            'username' => 'user1',
+            'email' => 'user1@example.com',
+            'password' => Hash::make('user1'),
+            'batch_id' => 1, // Default to first batch
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create student details for user 1
+        DB::table('student_details')->insert([
+            'user_id' => $userId1,
+            'address' => 'Sample Address 1',
+            'phone' => '1234567890',
+            'birth_date' => '2000-01-01',
+            'birth_place' => 'Sample City',
+            'gender' => 'male',
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create attendance record for user 1
+        DB::table('attendance_records')->insert([
+            'user_id' => $userId1,
+            'class_id' => 1,
+            'regular_attendance' => 0,
+            'css_attendance' => 0,
+            'cgg_attendance' => 0,
+            'excused_absences' => 0,
+            'journal_entry' => 0,
+            'permission' => 0,
+            'spr_father' => 0,
+            'spr_mother' => 0,
+            'spr_sibling' => 0,
+            'record_date' => now(),
+            'notes' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create user 2
+        $userId2 = DB::table('users')->insertGetId([
+            'nama' => 'User Two',
+            'nip' => '87654321',
+            'username' => 'user2',
+            'email' => 'user2@example.com',
+            'password' => Hash::make('user2'),
+            'batch_id' => 1, // Default to first batch
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create student details for user 2
+        DB::table('student_details')->insert([
+            'user_id' => $userId2,
+            'address' => 'Sample Address 2',
+            'phone' => '0987654321',
+            'birth_date' => '2001-02-02',
+            'birth_place' => 'Sample City 2',
+            'gender' => 'female',
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Create attendance record for user 2
+        DB::table('attendance_records')->insert([
+            'user_id' => $userId2,
+            'class_id' => 1,
+            'regular_attendance' => 0,
+            'css_attendance' => 0,
+            'cgg_attendance' => 0,
+            'excused_absences' => 0,
+            'journal_entry' => 0,
+            'permission' => 0,
+            'spr_father' => 0,
+            'spr_mother' => 0,
+            'spr_sibling' => 0,
+            'record_date' => now(),
+            'notes' => null,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

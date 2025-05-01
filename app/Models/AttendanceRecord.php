@@ -24,11 +24,29 @@ class AttendanceRecord extends Model
     ];
 
     protected $casts = [
+        'regular_attendance' => 'integer',
+        'css_attendance' => 'integer',
+        'cgg_attendance' => 'integer',
+        'total_sessions' => 'integer',
+        'excused_absences' => 'integer',
+        'journal_entry' => 'integer',
         'permission' => 'integer',
         'spr_father' => 'integer',
         'spr_mother' => 'integer',
-        'spr_sibling' => 'integer',
-        'journal_entry' => 'integer'
+        'spr_sibling' => 'integer'
+    ];
+
+    protected $attributes = [
+        'regular_attendance' => 0,
+        'css_attendance' => 0,
+        'cgg_attendance' => 0,
+        'total_sessions' => 0,
+        'excused_absences' => 0,
+        'journal_entry' => 0,
+        'permission' => 0,
+        'spr_father' => 0,
+        'spr_mother' => 0,
+        'spr_sibling' => 0
     ];
 
     /**

@@ -41,10 +41,8 @@
                                     <th>CSS</th>
                                     <th>CGG</th>
                                     <th>Journal</th>
-                                    <th>Permission</th>
-                                    <th>SPR Father</th>
-                                    <th>SPR Mother</th>
-                                    <th>SPR Sibling</th>
+                                    <th>Excused</th>
+                                    <th colspan="3">Last Update</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -54,14 +52,16 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $student->id }}</td>
                                     <td>{{ $student->nama }}</td>
-                                    <td>{{ $student->attendanceRecord->regular_attendance ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->css_attendance ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->cgg_attendance ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->journal_entry ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->permission ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->spr_father ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->spr_mother ?? 0 }}</td>
-                                    <td>{{ $student->attendanceRecord->spr_sibling ?? 0 }}</td>
+                                    <td>{{ optional($student->attendanceRecord)->regular_attendance ?? 0 }}</td>
+                                    <td>{{ optional($student->attendanceRecord)->css_attendance ?? 0 }}</td>
+                                    <td>{{ optional($student->attendanceRecord)->cgg_attendance ?? 0 }}</td>
+                                    <td>{{ optional($student->attendanceRecord)->journal_entry ?? 0 }}</td>
+                                    <td>{{ optional($student->attendanceRecord)->excused_absences ?? 0 }}</td>
+                                    <td colspan="3">
+                                        @if($student->attendanceRecord)
+                                            <small class="text-muted">Last updated: {{ $student->attendanceRecord->updated_at->format('Y-m-d H:i') }}</small>
+                                        @endif
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editModal{{ $student->id }}">
                                             <i class="fas fa-edit"></i> Edit
@@ -96,58 +96,50 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Regular Attendance</label>
-                                    <input type="number" name="regular_attendance" class="form-control" value="{{ $student->attendanceRecord->regular_attendance ?? 0 }}" min="0">
+                                    <input type="number" name="regular_attendance" class="form-control" value="{{ optional($student->attendanceRecord)->regular_attendance ?? 0 }}" min="0">
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>CSS Attendance</label>
-                                    <input type="number" name="css_attendance" class="form-control" value="{{ $student->attendanceRecord->css_attendance ?? 0 }}" min="0">
+                                    <input type="number" name="css_attendance" class="form-control" value="{{ optional($student->attendanceRecord)->css_attendance ?? 0 }}" min="0">
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>CGG Attendance</label>
-                                    <input type="number" name="cgg_attendance" class="form-control" value="{{ $student->attendanceRecord->cgg_attendance ?? 0 }}" min="0">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Total Sessions</label>
-                            <input type="number" name="total_sessions" class="form-control" value="{{ $student->attendanceRecord->total_sessions ?? 0 }}" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Journal Entry</label>
-                            <input type="number" name="journal_entry" class="form-control" value="{{ $student->attendanceRecord->journal_entry ?? 0 }}" min="0">
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Permission</label>
-                                    <input type="number" name="permission" class="form-control" value="{{ $student->attendanceRecord->permission ?? 0 }}" min="0">
+                                    <label>CGG Attendance</label>
+                                    <input type="number" name="cgg_attendance" class="form-control" value="{{ optional($student->attendanceRecord)->cgg_attendance ?? 0 }}" min="0">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>SPR Father</label>
-                                    <input type="number" name="spr_father" class="form-control" value="{{ $student->attendanceRecord->spr_father ?? 0 }}" min="0">
+                                    <label>Journal Entry</label>
+                                    <input type="number" name="journal_entry" class="form-control" value="{{ optional($student->attendanceRecord)->journal_entry ?? 0 }}" min="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Excused Absences</label>
+                                    <input type="number" name="excused_absences" class="form-control" value="{{ optional($student->attendanceRecord)->excused_absences ?? 0 }}" min="0">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>SPR Mother</label>
-                                    <input type="number" name="spr_mother" class="form-control" value="{{ $student->attendanceRecord->spr_mother ?? 0 }}" min="0">
+                                    <label>Record Date</label>
+                                    <input type="date" name="record_date" class="form-control" value="{{ optional($student->attendanceRecord)->record_date ?? now()->format('Y-m-d') }}" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>SPR Sibling</label>
-                                    <input type="number" name="spr_sibling" class="form-control" value="{{ $student->attendanceRecord->spr_sibling ?? 0 }}" min="0">
-                                </div>
-                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea name="notes" class="form-control" rows="3">{{ optional($student->attendanceRecord)->notes }}</textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

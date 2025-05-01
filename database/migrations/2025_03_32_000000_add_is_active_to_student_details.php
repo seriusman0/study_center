@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendance_records', function (Blueprint $table) {
-            $table->dropColumn(['attendance_percentage', 'total']);
+        Schema::table('student_details', function (Blueprint $table) {
+            $table->boolean('is_active')->default(true)->after('gender');
+            $table->index('is_active');
         });
     }
 
@@ -21,9 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('attendance_records', function (Blueprint $table) {
-            $table->decimal('attendance_percentage', 5, 2)->nullable();
-            $table->decimal('total', 8, 2)->default(0);
+        Schema::table('student_details', function (Blueprint $table) {
+            $table->dropIndex(['is_active']);
+            $table->dropColumn('is_active');
         });
     }
 };

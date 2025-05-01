@@ -59,14 +59,14 @@
         @csrf
 
         <div class="input-group mb-3">
-            <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                   value="{{ old('username') }}" placeholder="Username" autofocus>
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                   value="{{ old('email') }}" placeholder="Email" autofocus>
             <div class="input-group-append">
                 <div class="input-group-text">
-                    <span class="fas fa-user"></span>
+                    <span class="fas fa-envelope"></span>
                 </div>
             </div>
-            @error('username')
+            @error('email')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

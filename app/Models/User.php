@@ -3,44 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
     protected $fillable = [
         'nama',
         'nip',
         'username',
+        'email',
         'password',
-        'batch_id',
-        'gender',
-        'class_id',
-        'avatar'
+        'batch_id'
     ];
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
-    public $timestamps = false;
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
-     * Relationship with Batch
-     */
-    public function batch()
-    {
-        return $this->belongsTo(Batch::class);
-    }
-
-    public function class()
-    {
-        return $this->belongsTo(ClassRoom::class, 'class_id');
-    }
-
-    /**
-     * Relationship with StudentDetail
+     * Get the student details associated with the user.
      */
     public function studentDetail()
     {
@@ -48,7 +37,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship with FamilyMembers
+     * Get the class that the student belongs to through student details.
+     */
+    public function classRoom()
+    {
+        return $this->hasOneThrough(
+            ClassRoom::class,
+            StudentDetail::class,
+            'user_id', // Foreign key on student_details table
+            'id', // Foreign key on classes table
+            'id', // Local key on users table
+            'class_id' // Local key on student_details table
+        );
+    }
+
+    /**
+     * Get the family members associated with the user.
      */
     public function familyMembers()
     {
@@ -56,20 +60,15 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship with AttendanceRecord
+     * Get the attendance record associated with the user.
      */
     public function attendanceRecord()
     {
         return $this->hasOne(AttendanceRecord::class);
     }
 
-    public function permissionRequests()
-    {
-        return $this->hasMany(PermissionRequest::class);
-    }
-
     /**
-     * Relationship with Journals
+     * Get the journals associated with the user.
      */
     public function journals()
     {
@@ -77,94 +76,28 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship with Scholarship
+     * Get the permission requests associated with the user.
      */
-    public function scholarship()
+    public function permissionRequests()
     {
-        return $this->hasOne(Scholarship::class);
+        return $this->hasMany(PermissionRequest::class);
     }
 
     /**
-     * Get parent information
+     * Get the batch that owns the user.
      */
-    public function getParents()
+    public function batch()
     {
-        return $this->familyMembers()
-            ->whereIn('member_type', ['father', 'mother'])
-            ->get();
+        return $this->belongsTo(Batch::class);
     }
 
     /**
-     * Get siblings information
-     */
-    public function getSiblings()
-    {
-        return $this->familyMembers()
-            ->where('member_type', 'Sibling')
-            ->get();
-    }
-
-    /**
-     * Get father information
-     */
-    public function getFather()
-    {
-        return $this->familyMembers()
-            ->where('member_type', 'Father')
-            ->first();
-    }
-
-    /**
-     * Get mother information
-     */
-    public function getMother()
-    {
-        return $this->familyMembers()
-            ->where('member_type', 'Mother')
-            ->first();
-    }
-
-    /**
-     * Check if student meets scholarship criteria
-     */
-    public function checkScholarshipEligibility()
-    {
-        if (!$this->attendanceRecord) {
-            return false;
-        }
-
-        return $this->attendanceRecord->meetsMinimumAttendance();
-    }
-
-    /**
-     * Get journal submission rate
-     */
-    public function getJournalSubmissionRate($startDate, $endDate)
-    {
-        $totalDays = $startDate->diffInDays($endDate) + 1;
-        $submittedCount = $this->journals()
-            ->whereBetween('entry_date', [$startDate, $endDate])
-            ->where('is_submitted', true)
-            ->count();
-
-        return $totalDays > 0 ? ($submittedCount / $totalDays) * 100 : 0;
-    }
-
-    /**
-     * Scope for active students
+     * Scope a query to only include active users.
      */
     public function scopeActive($query)
     {
         return $query->whereHas('studentDetail', function ($q) {
             $q->where('is_active', true);
         });
-    }
-
-    /**
-     * Scope for students by class
-     */
-    public function scopeInClass($query, $classId)
-    {
-        return $query->where('class_id', $classId);
     }
 }

@@ -19,7 +19,9 @@ class AttendanceController extends Controller
     public function index()
     {
         $students = User::with(['attendanceRecord', 'studentDetail'])
-            ->active()
+            ->whereHas('studentDetail', function ($query) {
+                $query->where('is_active', true);
+            })
             ->paginate(15);
 
         return view('admin.attendance.index', compact('students'));
@@ -244,22 +246,19 @@ class AttendanceController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'regular_attendance' => 'nullable|integer|min:0',
-            'css_attendance' => 'nullable|integer|min:0',
-            'cgg_attendance' => 'nullable|integer|min:0',
-            'total_sessions' => 'required|integer|min:0',
-            'excused_absences' => 'nullable|integer|min:0',
-            'journal_entry' => 'integer|min:0',
-            'permission' => 'integer|min:0',
-            'spr_father' => 'integer|min:0',
-            'spr_mother' => 'integer|min:0',
-            'spr_sibling' => 'integer|min:0'
+            'regular_attendance' => 'required|integer|min:0',
+            'css_attendance' => 'required|integer|min:0',
+            'cgg_attendance' => 'required|integer|min:0',
+            'excused_absences' => 'required|integer|min:0',
+            'journal_entry' => 'required|integer|min:0',
+            'record_date' => 'required|date',
+            'notes' => 'nullable|string'
         ]);
 
         $attendance = $user->attendanceRecord ?? new AttendanceRecord(['user_id' => $user->id]);
         $attendance->fill($validated);
         $attendance->save();
 
-        return redirect()->back()->with('success', 'Data kehadiran berhasil diperbarui');
+        return redirect()->back()->with('success', 'Attendance record updated successfully');
     }
 }
