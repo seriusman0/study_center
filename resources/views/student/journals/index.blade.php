@@ -100,9 +100,20 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('student.journals.show', $journal) }}" 
-                                                       class="btn btn-sm btn-info">
+                                                       class="btn btn-sm btn-info" title="View">
                                                         <i class="fas fa-eye"></i>
                                                     </a>
+                                                    <a href="{{ route('student.journals.edit', $journal) }}" 
+                                                       class="btn btn-sm btn-warning" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('student.journals.destroy', $journal) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this journal entry?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
