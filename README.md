@@ -2,7 +2,7 @@ Here's a customized README.md for your "Study Center" project based on the infor
 
 ---
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://studycenter.or.id/wp-content/uploads/2017/03/infogram-banner-sc1.jpg" width="400" alt="SC Logo"></a></p>
 
 <h1 align="center">Study Center</h1>
 
