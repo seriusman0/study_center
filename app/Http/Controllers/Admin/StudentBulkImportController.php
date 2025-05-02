@@ -25,6 +25,19 @@ class StudentBulkImportController extends Controller
     }
 
     /**
+     * Get column letter for Excel
+     */
+    private function getColumnLetter($index)
+    {
+        $letter = '';
+        while ($index >= 0) {
+            $letter = chr(65 + ($index % 26)) . $letter;
+            $index = floor($index / 26) - 1;
+        }
+        return $letter;
+    }
+
+    /**
      * Download the import template
      */
     public function downloadTemplate()
@@ -36,51 +49,66 @@ class StudentBulkImportController extends Controller
         $headers = [
             // User Information
             'Nama*', 'NIP*', 'Username*', 'Email*', 'Gender*',
-            // Removed Batch ID and Class ID columns
             // Student Details
-            'Sekolah*', 'SPP*', 'No Rekening*', 'Nama Bank*', 'Cabang Bank*', 
-            'Pemilik Rekening*', 'Tingkat Kelas*', 'Tahun Ajaran*',
+            'Address', 'Phone', 'Birth Date', 'Birth Place',
+            'Sekolah', 'SPP', 'No Rekening', 'Nama Bank', 
+            'Cabang Bank', 'Pemilik Rekening', 'Tingkat Kelas', 
+            'Tahun Ajaran', 'Nominal SPP Default',
             
             // Father's Information
-            'Nama Ayah*',
+            'Nama Ayah', 'Pekerjaan Ayah', 'No HP Ayah', 'Alamat Ayah',
             
             // Mother's Information
-            'Nama Ibu*',
+            'Nama Ibu', 'Pekerjaan Ibu', 'No HP Ibu', 'Alamat Ibu',
             
-            // Sibling Information (Optional)
-            'Nama Saudara 1', 'Nama Saudara 2', 'Nama Saudara 3'
+            // Sibling Information
+            'Nama Saudara', 'Pekerjaan Saudara', 'No HP Saudara', 'Alamat Saudara'
         ];
 
-        // Set column headers
-        foreach (range(0, count($headers) - 1) as $i) {
-            $column = chr(65 + $i); // Convert number to letter (A, B, C, etc.)
-            $sheet->setCellValue($column . '1', $headers[$i]);
-            
-            // Set column width
+        // Set column headers and widths
+        foreach ($headers as $index => $header) {
+            $column = $this->getColumnLetter($index);
+            $sheet->setCellValue($column . '1', $header);
             $sheet->getColumnDimension($column)->setWidth(20);
         }
 
         // Add sample data
         $sampleData = [
-            'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'Male',
-            'SMA Negeri 1', '500000', '1234567890', 'BCA', 'Jakarta',
-            'John Doe', '11', '2023/2024',
-            'James Doe', 'Jane Doe',
-            'Sarah Doe', 'Mike Doe', ''
+            'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'male',
+            'Jl. Sample', '08123456789', '2000-01-01', 'Jakarta',
+            'SMA Negeri 1', '500000', '1234567890', 'BCA',
+            'Jakarta', 'John Doe', '11', '2023/2024', '500000',
+            'James Doe', 'Wiraswasta', '08111222333', 'Jl. Father',
+            'Jane Doe', 'Ibu Rumah Tangga', '08444555666', 'Jl. Mother',
+            'Sarah Doe', 'Pelajar', '08777888999', 'Jl. Sibling'
         ];
 
-        foreach (range(0, count($sampleData) - 1) as $i) {
-            $column = chr(65 + $i);
-            $sheet->setCellValue($column . '2', $sampleData[$i]);
+        // Set sample data
+        foreach ($sampleData as $index => $value) {
+            $column = $this->getColumnLetter($index);
+            $sheet->setCellValue($column . '2', $value);
         }
+
+        // Style the header row
+        $lastColumn = $this->getColumnLetter(count($headers) - 1);
+        $sheet->getStyle('A1:' . $lastColumn . '1')->applyFromArray([
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'FFFFFF'],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4B5563'],
+            ],
+        ]);
 
         // Add notes
         $sheet->setCellValue('A4', 'Notes:');
         $sheet->setCellValue('A5', '1. Fields marked with * are mandatory');
-        $sheet->setCellValue('A6', '2. Gender should be either "Male" or "Female"');
-        $sheet->setCellValue('A7', '3. Batch ID and Class ID should be valid IDs from the system');
-        $sheet->setCellValue('A8', '4. SPP should be in numeric format without currency symbol');
-        $sheet->setCellValue('A9', '5. Username must be unique');
+        $sheet->setCellValue('A6', '2. Gender should be either "male" or "female"');
+        $sheet->setCellValue('A7', '3. Birth Date should be in YYYY-MM-DD format');
+        $sheet->setCellValue('A8', '4. SPP and Nominal SPP Default should be numeric');
+        $sheet->setCellValue('A9', '5. Username and NIP must be unique');
 
         // Create the file
         $writer = new Xlsx($spreadsheet);
@@ -114,87 +142,87 @@ class StudentBulkImportController extends Controller
 
             foreach ($rows as $index => $row) {
                 try {
+                    // Skip empty rows
+                    if (empty($row[0])) continue;
+
                     // Check for existing user
                     if (User::where('nip', $row[1])->orWhere('username', $row[2])->exists()) {
                         throw new \Exception("User with NIP '{$row[1]}' or username '{$row[2]}' already exists.");
                     }
 
-            // Validate required fields
-            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])) {
-                throw new \Exception("Required user fields are missing.");
-            }
+                    // Validate required fields
+                    if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])) {
+                        throw new \Exception("Required user fields are missing.");
+                    }
 
                     // Validate gender
                     if (!in_array(strtolower($row[4]), ['male', 'female'])) {
-                        throw new \Exception("Invalid gender value. Must be 'Male' or 'Female'.");
+                        throw new \Exception("Invalid gender value. Must be 'male' or 'female'.");
                     }
 
                     // Create User
-                    try {
-                        $user = new User([
-                            'nama' => $row[0],
-                            'nip' => $row[1],
-                            'username' => $row[2],
-                            'email' => $row[3],
-                            'password' => Hash::make(Str::random(8)), // Generate random password
-                            'gender' => ucfirst(strtolower($row[4])), // Normalize gender
-                            // Removed batch_id and class_id as columns do not exist
-                        ]);
-                        $user->save();
-                    } catch (\Exception $e) {
-                        throw new \Exception("Failed to create user: " . $e->getMessage());
-                    }
+                    $user = User::create([
+                        'nama' => $row[0],
+                        'nip' => $row[1],
+                        'username' => $row[2],
+                        'email' => $row[3],
+                        'password' => Hash::make(Str::random(8)), // Generate random password
+                    ]);
 
-                    // Validate and create StudentDetail
-                    if (empty($row[6]) || empty($row[7]) || empty($row[8])) {
-                        throw new \Exception("Required student detail fields are missing.");
-                    }
+                    // Create StudentDetail
+                    StudentDetail::create([
+                        'user_id' => $user->id,
+                        'address' => $row[5],
+                        'phone' => $row[6],
+                        'birth_date' => $row[7],
+                        'birth_place' => $row[8],
+                        'gender' => strtolower($row[4]),
+                        'sekolah' => $row[9],
+                        'spp' => $row[10],
+                        'no_rekening' => $row[11],
+                        'nama_bank' => $row[12],
+                        'cabang_bank' => $row[13],
+                        'pemilik_rekening' => $row[14],
+                        'tingkat_kelas' => $row[15],
+                        'tahun_ajaran' => $row[16],
+                        'nominal_spp_default' => $row[17],
+                        'is_active' => true
+                    ]);
 
-                    try {
-                        $studentDetail = new StudentDetail([
-                            'user_id' => $user->id,
-                            'sekolah' => $row[6],
-                            'spp' => $row[7],
-                            'no_rekening' => $row[8],
-                            'nama_bank' => $row[9] ?? '',
-                            'cabang_bank' => $row[10] ?? '',
-                            'pemilik_rekening' => $row[11] ?? '',
-                            'tingkat_kelas' => $row[12] ?? '',
-                            'tahun_ajaran' => $row[13] ?? '',
-                            'is_active' => true
-                        ]);
-                        $studentDetail->save();
-                    } catch (\Exception $e) {
-                        throw new \Exception("Failed to create student details: " . $e->getMessage());
-                    }
-
-                    // Create Father
-                    if (!empty($row[14])) {
+                    // Create Father if name is provided
+                    if (!empty($row[18])) {
                         FamilyMember::create([
                             'user_id' => $user->id,
-                            'member_type' => 'Father',
-                            'nama' => $row[14]
+                            'name' => $row[18],
+                            'relationship' => 'father',
+                            'occupation' => $row[19] ?? null,
+                            'phone' => $row[20] ?? null,
+                            'address' => $row[21] ?? null
                         ]);
                     }
 
-                    // Create Mother
-                    if (!empty($row[15])) {
+                    // Create Mother if name is provided
+                    if (!empty($row[22])) {
                         FamilyMember::create([
                             'user_id' => $user->id,
-                            'member_type' => 'Mother',
-                            'nama' => $row[15]
+                            'name' => $row[22],
+                            'relationship' => 'mother',
+                            'occupation' => $row[23] ?? null,
+                            'phone' => $row[24] ?? null,
+                            'address' => $row[25] ?? null
                         ]);
                     }
 
-                    // Create Siblings
-                    for ($i = 16; $i <= 18; $i++) {
-                        if (!empty($row[$i])) {
-                            FamilyMember::create([
-                                'user_id' => $user->id,
-                                'member_type' => 'Sibling',
-                                'nama' => $row[$i]
-                            ]);
-                        }
+                    // Create Sibling if name is provided
+                    if (!empty($row[26])) {
+                        FamilyMember::create([
+                            'user_id' => $user->id,
+                            'name' => $row[26],
+                            'relationship' => 'sibling',
+                            'occupation' => $row[27] ?? null,
+                            'phone' => $row[28] ?? null,
+                            'address' => $row[29] ?? null
+                        ]);
                     }
 
                     $imported++;

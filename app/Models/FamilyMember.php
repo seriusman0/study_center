@@ -11,9 +11,12 @@ class FamilyMember extends Model
 
     protected $fillable = [
         'user_id',
-        'member_type',
-        'nama',
-        'member_id',
+        'name',
+        'relationship',
+        'occupation',
+        'phone',
+        'address',
+        'member_ids'
     ];
 
     /**

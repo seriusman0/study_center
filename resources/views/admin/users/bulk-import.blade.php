@@ -76,7 +76,14 @@
                             <li>Download the template using the button above</li>
                             <li>Fill in the required information in the Excel file</li>
                             <li>Required fields are marked with an asterisk (*)</li>
-                            <li>Make sure Batch ID and Class ID are valid in the system</li>
+                            <li>Make sure to follow these guidelines:
+                                <ul>
+                                    <li>Gender must be either "male" or "female"</li>
+                                    <li>Birth Date should be in YYYY-MM-DD format</li>
+                                    <li>SPP and Nominal SPP Default should be numeric values</li>
+                                    <li>Username and NIP must be unique</li>
+                                </ul>
+                            </li>
                             <li>Upload the filled template using the form above</li>
                             <li>Review any errors or warnings after upload</li>
                         </ol>
