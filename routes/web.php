@@ -78,11 +78,11 @@ Route::prefix('admin')->group(function () {
             ->names('admin.permissions');
 
         // Journal Management Routes
-        Route::resource('journals', App\Http\Controllers\Admin\JournalController::class)->names('admin.journals');
         Route::get('journals/statistics', [App\Http\Controllers\Admin\JournalController::class, 'statistics'])
             ->name('admin.journals.statistics');
-        Route::get('journals/{journal}/entry-show', [App\Http\Controllers\Admin\JournalController::class, 'entryShow'])
+        Route::get('journals/entry/{journal}', [App\Http\Controllers\Admin\JournalController::class, 'entryShow'])
             ->name('admin.journals.entry-show');
+        Route::resource('journals', App\Http\Controllers\Admin\JournalController::class)->names('admin.journals');
 
         // Batch Management Routes
         

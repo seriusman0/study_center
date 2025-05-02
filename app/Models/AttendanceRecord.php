@@ -14,41 +14,37 @@ class AttendanceRecord extends Model
         'regular_attendance',
         'css_attendance',
         'cgg_attendance',
-        'total_sessions',
-        // Removed excused_absences from fillable
         'journal_entry',
         'permission',
         'spr_father',
         'spr_mother',
-        'spr_sibling'
+        'spr_sibling',
+        'record_date',
+        'notes'
     ];
 
     protected $casts = [
         'regular_attendance' => 'integer',
         'css_attendance' => 'integer',
         'cgg_attendance' => 'integer',
-        'total_sessions' => 'integer',
-        // Removed excused_absences from casts
         'journal_entry' => 'integer',
         'permission' => 'integer',
         'spr_father' => 'integer',
         'spr_mother' => 'integer',
-        'spr_sibling' => 'integer'
+        'spr_sibling' => 'integer',
+        'record_date' => 'date'
     ];
 
     protected $attributes = [
         'regular_attendance' => 0,
         'css_attendance' => 0,
         'cgg_attendance' => 0,
-        'total_sessions' => 0,
-        // Removed excused_absences from attributes
         'journal_entry' => 0,
         'permission' => 0,
         'spr_father' => 0,
         'spr_mother' => 0,
         'spr_sibling' => 0
     ];
-
 
     /**
      * Relationship with User

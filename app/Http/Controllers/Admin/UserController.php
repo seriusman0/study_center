@@ -16,26 +16,78 @@ class UserController extends Controller
 
     public function create()
     {
-        // Removed batch fetching
         return view('admin.users.create');
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            // User basic info
             'nama' => 'required|string|max:255',
             'nip' => 'required|string|max:255|unique:users',
             'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            // Removed batch_id validation
+            
+            // Student details
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'birth_place' => 'required|string|max:255',
+            'gender' => 'required|string|in:male,female',
+            
+            // Additional student details
+            'sekolah' => 'nullable|string|max:255',
+            'spp' => 'nullable|string|max:255',
+            'no_rekening' => 'nullable|string|max:255',
+            'nama_bank' => 'nullable|string|max:255',
+            'cabang_bank' => 'nullable|string|max:255',
+            'pemilik_rekening' => 'nullable|string|max:255',
+            'tingkat_kelas' => 'nullable|string|max:255',
+            'tahun_ajaran' => 'nullable|string|max:255',
+            'nominal_spp_default' => 'nullable|string|max:255',
         ]);
 
-        User::create([
+        // Create user
+        $user = User::create([
             'nama' => $validatedData['nama'],
             'nip' => $validatedData['nip'],
             'username' => $validatedData['username'],
+            'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
-            // Removed batch_id assignment
+        ]);
+
+        // Create student details
+        $user->studentDetail()->create([
+            'address' => $validatedData['address'],
+            'phone' => $validatedData['phone'],
+            'birth_date' => $validatedData['birth_date'],
+            'birth_place' => $validatedData['birth_place'],
+            'gender' => $validatedData['gender'],
+            'sekolah' => $validatedData['sekolah'],
+            'spp' => $validatedData['spp'],
+            'no_rekening' => $validatedData['no_rekening'],
+            'nama_bank' => $validatedData['nama_bank'],
+            'cabang_bank' => $validatedData['cabang_bank'],
+            'pemilik_rekening' => $validatedData['pemilik_rekening'],
+            'tingkat_kelas' => $validatedData['tingkat_kelas'],
+            'tahun_ajaran' => $validatedData['tahun_ajaran'],
+            'nominal_spp_default' => $validatedData['nominal_spp_default'],
+            'is_active' => true,
+        ]);
+
+        // Create attendance record
+        $user->attendanceRecord()->create([
+            'regular_attendance' => 0,
+            'css_attendance' => 0,
+            'cgg_attendance' => 0,
+            'journal_entry' => 0,
+            'permission' => 0,
+            'spr_father' => 0,
+            'spr_mother' => 0,
+            'spr_sibling' => 0,
+            'record_date' => now(),
+            'notes' => null
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -43,18 +95,14 @@ class UserController extends Controller
 
     public function show(User $user)
     {
+        $user->load(['studentDetail', 'attendanceRecord']);
         return view('admin.users.show', compact('user'));
     }
 
     public function edit(User $user)
     {
-        // Removed batch fetching
-        $classes = \App\Models\ClassRoom::where('is_active', true)
-            ->orderBy('level')
-            ->orderBy('section')
-            ->get();
-        $user->load(['studentDetail', 'familyMembers']); // Eager load relationships
-        return view('admin.users.edit', compact('user', 'classes'));
+        $user->load(['studentDetail']);
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
@@ -65,43 +113,49 @@ class UserController extends Controller
             'nip' => 'required|string|max:255|unique:users,nip,' . $user->id,
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
-            // Removed batch_id validation
-            'gender' => 'nullable|string|in:L,P',
-            'class_id' => 'nullable|exists:classes,id',
             
             // Student details
-            'sekolah' => 'required|string|max:255',
-            'spp' => 'required|numeric',
-            'no_rekening' => 'required|string|max:255',
-            'nama_bank' => 'required|string|max:255',
-            'cabang_bank' => 'required|string|max:255',
-            'pemilik_rekening' => 'required|string|max:255',
-            'tingkat_kelas' => 'required|string|max:255',
-            'tahun_ajaran' => 'required|string|max:255',
-            'nominal_spp_default' => 'required|numeric',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'birth_place' => 'required|string|max:255',
+            'gender' => 'required|string|in:male,female',
             
-            // Family members
-            'father_name' => 'required|string|max:255',
-            'father_id' => 'nullable|string|max:255',
-            'mother_name' => 'required|string|max:255',
-            'mother_id' => 'nullable|string|max:255',
+            // Additional student details
+            'sekolah' => 'nullable|string|max:255',
+            'spp' => 'nullable|string|max:255',
+            'no_rekening' => 'nullable|string|max:255',
+            'nama_bank' => 'nullable|string|max:255',
+            'cabang_bank' => 'nullable|string|max:255',
+            'pemilik_rekening' => 'nullable|string|max:255',
+            'tingkat_kelas' => 'nullable|string|max:255',
+            'tahun_ajaran' => 'nullable|string|max:255',
+            'nominal_spp_default' => 'nullable|string|max:255',
         ]);
 
         // Update user basic info
-        $user->update([
+        $updateData = [
             'nama' => $validatedData['nama'],
             'nip' => $validatedData['nip'],
             'username' => $validatedData['username'],
-            'password' => $validatedData['password'] ? bcrypt($validatedData['password']) : $user->password,
-            // Removed batch_id update
-            'gender' => $validatedData['gender'],
-            'class_id' => $validatedData['class_id'],
-        ]);
+        ];
+
+        // Only update password if provided
+        if ($validatedData['password']) {
+            $updateData['password'] = bcrypt($validatedData['password']);
+        }
+
+        $user->update($updateData);
 
         // Update or create student details
         $user->studentDetail()->updateOrCreate(
             ['user_id' => $user->id],
             [
+                'address' => $validatedData['address'],
+                'phone' => $validatedData['phone'],
+                'birth_date' => $validatedData['birth_date'],
+                'birth_place' => $validatedData['birth_place'],
+                'gender' => $validatedData['gender'],
                 'sekolah' => $validatedData['sekolah'],
                 'spp' => $validatedData['spp'],
                 'no_rekening' => $validatedData['no_rekening'],
@@ -111,29 +165,11 @@ class UserController extends Controller
                 'tingkat_kelas' => $validatedData['tingkat_kelas'],
                 'tahun_ajaran' => $validatedData['tahun_ajaran'],
                 'nominal_spp_default' => $validatedData['nominal_spp_default'],
+                'is_active' => true,
             ]
         );
 
-        // Update father's information
-        $user->familyMembers()->updateOrCreate(
-            ['member_type' => 'Father'],
-            [
-                'nama' => $validatedData['father_name'],
-                'member_id' => $validatedData['father_id'],
-            ]
-        );
-
-        // Update mother's information
-        $user->familyMembers()->updateOrCreate(
-            ['member_type' => 'Mother'],
-            [
-                'nama' => $validatedData['mother_name'],
-                'member_id' => $validatedData['mother_id'],
-            ]
-        );
-
-
-        return redirect()->route('admin.users.index')->with('success', 'User and related information updated successfully.');
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
     public function destroy(User $user)

@@ -12,6 +12,11 @@ class StudentDetail extends Model
     protected $fillable = [
         'user_id',
         'class_id',
+        'address',
+        'phone',
+        'birth_date',
+        'birth_place',
+        'gender',
         'sekolah',
         'spp',
         'no_rekening',
@@ -25,7 +30,8 @@ class StudentDetail extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'birth_date' => 'date'
     ];
 
     /**

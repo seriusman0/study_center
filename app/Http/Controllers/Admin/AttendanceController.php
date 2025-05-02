@@ -48,9 +48,9 @@ class AttendanceController extends Controller
 
         // Set headers
         $headers = [
-            'NO', 'ID', 'NAME', 
-            'HADIR REG', 'HADIR BHS', 'HADIR CSS', 'HADIR CGG',
-            'JOURNAL ENTRY', 'EXCUSED',
+            'NO', 'ID', 'NAME', 'RECORD DATE',
+            'HADIR REG', 'HADIR CSS', 'HADIR CGG',
+            'JOURNAL ENTRY', 'PERMISSION',
             'SPR FATHER', 'SPR MOTHER', 'SPR SIBLING'
         ];
 
@@ -79,19 +79,32 @@ class AttendanceController extends Controller
             $sheet->setCellValue('A' . $rowIndex, $index + 1);    // NO
             $sheet->setCellValue('B' . $rowIndex, $student->id);   // ID
             $sheet->setCellValue('C' . $rowIndex, $student->nama); // NAME
+            $sheet->setCellValue('D' . $rowIndex, date('Y-m-d')); // RECORD DATE (today's date)
             
             // Set attendance data cells with actual values or 0
-            $sheet->setCellValue('D' . $rowIndex, $student->attendanceRecord->regular_attendance ?? 0);
-            $sheet->setCellValue('E' . $rowIndex, $student->attendanceRecord->css_attendance ?? 0);
-            $sheet->setCellValue('F' . $rowIndex, $student->attendanceRecord->cgg_attendance ?? 0);
-            $sheet->setCellValue('G' . $rowIndex, $student->attendanceRecord->journal_entry ?? 0);
-            $sheet->setCellValue('H' . $rowIndex, $excusedCount);
-            $sheet->setCellValue('I' . $rowIndex, $student->attendanceRecord->spr_father ?? 0);
-            $sheet->setCellValue('J' . $rowIndex, $student->attendanceRecord->spr_mother ?? 0);
-            $sheet->setCellValue('K' . $rowIndex, $student->attendanceRecord->spr_sibling ?? 0);
+            $sheet->setCellValue('E' . $rowIndex, $student->attendanceRecord->regular_attendance ?? 0);
+            $sheet->setCellValue('F' . $rowIndex, $student->attendanceRecord->css_attendance ?? 0);
+            $sheet->setCellValue('G' . $rowIndex, $student->attendanceRecord->cgg_attendance ?? 0);
+            $sheet->setCellValue('H' . $rowIndex, $student->attendanceRecord->journal_entry ?? 0);
+            $sheet->setCellValue('I' . $rowIndex, $student->attendanceRecord->permission ?? 0);
+            $sheet->setCellValue('J' . $rowIndex, $student->attendanceRecord->spr_father ?? 0);
+            $sheet->setCellValue('K' . $rowIndex, $student->attendanceRecord->spr_mother ?? 0);
+            $sheet->setCellValue('L' . $rowIndex, $student->attendanceRecord->spr_sibling ?? 0);
 
-            // Add data validation for numeric values for columns D to K
-            foreach (range(3, 10) as $colIndex) {
+            // Add date validation for record_date column (D)
+            $dateValidation = $sheet->getCell('D' . $rowIndex)->getDataValidation();
+            $dateValidation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_DATE);
+            $dateValidation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP);
+            $dateValidation->setAllowBlank(false);
+            $dateValidation->setShowInputMessage(true);
+            $dateValidation->setShowErrorMessage(true);
+            $dateValidation->setErrorTitle('Invalid Date');
+            $dateValidation->setError('Please enter a valid date (YYYY-MM-DD)');
+            $dateValidation->setPromptTitle('Date');
+            $dateValidation->setPrompt('Enter date in YYYY-MM-DD format');
+
+            // Add data validation for numeric values for columns E to L
+            foreach (range(4, 11) as $colIndex) {
                 $column = chr(65 + $colIndex);
                 $validation = $sheet->getCell($column . $rowIndex)->getDataValidation();
                 $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_WHOLE);
@@ -177,23 +190,30 @@ class AttendanceController extends Controller
                         throw new \Exception("Student with ID '{$row[1]}' not found.");
                     }
 
-                    // Validate numeric values
-                    foreach ([3, 4, 5, 6, 7, 8, 9, 10, 11] as $index) {
+                    // Validate numeric values (skipping the record_date column)
+                    foreach ([4, 5, 6, 7, 8, 9, 10, 11] as $index) {
                         if (!is_numeric($row[$index])) {
                             throw new \Exception("Column " . ($index + 1) . " must be a numeric value.");
                         }
                     }
 
+                    // Validate record date
+                    if (empty($row[3]) || !strtotime($row[3])) {
+                        throw new \Exception("Invalid or missing record date.");
+                    }
+
                     $attendance = $user->attendanceRecord ?? new AttendanceRecord(['user_id' => $user->id]);
                     $attendance->fill([
-                        'regular_attendance' => (int)$row[3],
-                        'css_attendance' => (int)$row[4],
-                        'cgg_attendance' => (int)$row[5],
+                        'record_date' => date('Y-m-d', strtotime($row[3])),
+                        'regular_attendance' => (int)$row[4],
+                        'css_attendance' => (int)$row[5],
+                        'cgg_attendance' => (int)$row[6],
                         'journal_entry' => (int)$row[7],
                         'permission' => (int)$row[8],
                         'spr_father' => (int)$row[9],
                         'spr_mother' => (int)$row[10],
-                        'spr_sibling' => (int)$row[11]
+                        'spr_sibling' => (int)$row[11],
+                        'notes' => null
                     ]);
 
                     $attendance->save();

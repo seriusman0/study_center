@@ -26,9 +26,14 @@ class JournalController extends Controller
     /**
      * Show student's journal entries
      */
-    public function show(Journal $journal)
+    public function show($id)
     {
-        return view('admin.journals.entry_show', compact('journal'));
+        $user = User::findOrFail($id);
+        $journals = Journal::where('user_id', $id)
+            ->orderBy('entry_date', 'desc')
+            ->paginate(10);
+        
+        return view('admin.journals.show', compact('user', 'journals'));
     }
 
     /**
