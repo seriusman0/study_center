@@ -36,6 +36,14 @@ class JournalController extends Controller
     }
 
     /**
+     * Show a single journal entry
+     */
+    public function entryShow(Journal $journal)
+    {
+        return view('admin.journals.entry_show', compact('journal'));
+    }
+
+    /**
      * Store a new journal entry
      */
     public function store(Request $request, User $user)

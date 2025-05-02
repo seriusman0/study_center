@@ -31,6 +31,11 @@ class JournalController extends Controller
      */
     public function create()
     {
+        $existingJournal = auth()->user()->journals()->whereDate('entry_date', now()->toDateString())->first();
+        if ($existingJournal) {
+            return redirect()->route('student.journals.edit', $existingJournal->id)
+                ->with('info', 'You have already submitted a journal entry for today. You can edit it here.');
+        }
         return view('student.journals.create');
     }
 

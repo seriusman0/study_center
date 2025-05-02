@@ -64,13 +64,7 @@
             </a>
           </li>
 
-          <!-- Beasiswa Management -->
-          <li class="nav-item">
-            <a href="{{ route('admin.scholarships.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-graduation-cap"></i>
-              <p>Beasiswa SCGS</p>
-            </a>
-          </li>
+        
 
           <!-- Kehadiran -->
           <li class="nav-item has-treeview">
@@ -88,24 +82,7 @@
                   <p>Overview</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.attendance.regular') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Regular</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.attendance.css') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>CSS</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.attendance.cgg') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>CGG</p>
-                </a>
-              </li>
+             
               <li class="nav-item">
                 <a href="{{ route('admin.attendance.import') }}" class="nav-link">
                   <i class="fas fa-upload nav-icon"></i>
@@ -162,18 +139,7 @@
                   <p>Siswa</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.classes.index') }}" class="nav-link {{ Request::routeIs('admin.classes.*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Kelas</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.batches.index') }}" class="nav-link {{ Request::routeIs('admin.batches.*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Batch</p>
-                </a>
-              </li>
+              
             </ul>
           </li>
 

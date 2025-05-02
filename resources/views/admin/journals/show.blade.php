@@ -4,7 +4,13 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="mb-4">Journals for {{ $user->nama }}</h1>
+    <h1 class="mb-4">
+        @if(!empty($user->nama))
+            Journals for {{ $user->nama }}
+        @else
+            Journals for User ID: {{ $user->id }}
+        @endif
+    </h1>
 
     <a href="{{ route('admin.journals.index') }}" class="btn btn-secondary mb-3">Back to Journal List</a>
 
@@ -46,7 +52,7 @@
             {{ $journals->links() }}
         </div>
     @else
-        <p>No journal entries found for this student.</p>
+        <p>This student has not submitted any journal entries yet.</p>
     @endif
 </div>
 @endsection
