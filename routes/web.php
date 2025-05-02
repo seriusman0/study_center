@@ -85,7 +85,6 @@ Route::prefix('admin')->group(function () {
             ->name('admin.journals.entry-show');
 
         // Batch Management Routes
-        Route::resource('batches', App\Http\Controllers\Admin\BatchController::class)->names('admin.batches');
         
         // Class Management Routes
         Route::resource('classes', App\Http\Controllers\Admin\ClassController::class)->names('admin.classes');

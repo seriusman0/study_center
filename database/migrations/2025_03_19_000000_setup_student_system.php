@@ -20,6 +20,18 @@ return new class extends Migration
                 $table->date('birth_date')->nullable();
                 $table->string('birth_place')->nullable();
                 $table->enum('gender', ['male', 'female'])->nullable();
+
+                // Added missing columns
+                $table->string('sekolah')->nullable();
+                $table->string('spp')->nullable();
+                $table->string('no_rekening')->nullable();
+                $table->string('nama_bank')->nullable();
+                $table->string('cabang_bank')->nullable();
+                $table->string('pemilik_rekening')->nullable();
+                $table->string('tingkat_kelas')->nullable();
+                $table->string('tahun_ajaran')->nullable();
+                $table->string('nominal_spp_default')->nullable();
+
                 $table->boolean('is_active')->default(true);
                 $table->timestamps();
 

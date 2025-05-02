@@ -40,7 +40,7 @@ class StudentSeeder extends Seeder
             'regular_attendance' => 0,
             'css_attendance' => 0,
             'cgg_attendance' => 0,
-            'excused_absences' => 0,
+            // Removed excused_absences as column no longer exists
             'journal_entry' => 0,
             'record_date' => now(),
             'created_at' => now(),

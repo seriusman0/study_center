@@ -14,8 +14,7 @@ class User extends Authenticatable
         'nip',
         'username',
         'email',
-        'password',
-        'batch_id'
+        'password'
     ];
 
     protected $hidden = [

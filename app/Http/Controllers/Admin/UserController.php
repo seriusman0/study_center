@@ -4,21 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Batch;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('batch')->get(); // Load batch data with users
+        $users = User::all(); // Removed batch relation loading
         return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
-        $batches = Batch::all(); // Get all batches
-        return view('admin.users.create', compact('batches'));
+        // Removed batch fetching
+        return view('admin.users.create');
     }
 
     public function store(Request $request)
@@ -28,7 +27,7 @@ class UserController extends Controller
             'nip' => 'required|string|max:255|unique:users',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'batch_id' => 'required|exists:batches,id', // Validate batch_id
+            // Removed batch_id validation
         ]);
 
         User::create([
@@ -36,7 +35,7 @@ class UserController extends Controller
             'nip' => $validatedData['nip'],
             'username' => $validatedData['username'],
             'password' => bcrypt($validatedData['password']),
-            'batch_id' => $validatedData['batch_id'], // Include batch_id
+            // Removed batch_id assignment
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
@@ -49,13 +48,13 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $batches = Batch::all();
+        // Removed batch fetching
         $classes = \App\Models\ClassRoom::where('is_active', true)
             ->orderBy('level')
             ->orderBy('section')
             ->get();
         $user->load(['studentDetail', 'familyMembers']); // Eager load relationships
-        return view('admin.users.edit', compact('user', 'batches', 'classes'));
+        return view('admin.users.edit', compact('user', 'classes'));
     }
 
     public function update(Request $request, User $user)
@@ -66,7 +65,7 @@ class UserController extends Controller
             'nip' => 'required|string|max:255|unique:users,nip,' . $user->id,
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
-            'batch_id' => 'required|exists:batches,id',
+            // Removed batch_id validation
             'gender' => 'nullable|string|in:L,P',
             'class_id' => 'nullable|exists:classes,id',
             
@@ -94,7 +93,7 @@ class UserController extends Controller
             'nip' => $validatedData['nip'],
             'username' => $validatedData['username'],
             'password' => $validatedData['password'] ? bcrypt($validatedData['password']) : $user->password,
-            'batch_id' => $validatedData['batch_id'],
+            // Removed batch_id update
             'gender' => $validatedData['gender'],
             'class_id' => $validatedData['class_id'],
         ]);

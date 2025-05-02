@@ -26,13 +26,9 @@ class JournalController extends Controller
     /**
      * Show student's journal entries
      */
-    public function show(User $user)
+    public function show(Journal $journal)
     {
-        $journals = $user->journals()
-            ->latest()
-            ->paginate(20);
-
-        return view('admin.journals.show', compact('user', 'journals'));
+        return view('admin.journals.entry_show', compact('journal'));
     }
 
     /**

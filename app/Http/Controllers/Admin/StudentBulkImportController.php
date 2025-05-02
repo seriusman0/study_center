@@ -35,8 +35,8 @@ class StudentBulkImportController extends Controller
         // Set headers
         $headers = [
             // User Information
-            'Nama*', 'NIP*', 'Username*', 'Email*', 'Gender*', 'Batch ID*', 'Class ID*',
-            
+            'Nama*', 'NIP*', 'Username*', 'Email*', 'Gender*',
+            // Removed Batch ID and Class ID columns
             // Student Details
             'Sekolah*', 'SPP*', 'No Rekening*', 'Nama Bank*', 'Cabang Bank*', 
             'Pemilik Rekening*', 'Tingkat Kelas*', 'Tahun Ajaran*',
@@ -62,7 +62,7 @@ class StudentBulkImportController extends Controller
 
         // Add sample data
         $sampleData = [
-            'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'Male', '1', '1',
+            'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'Male',
             'SMA Negeri 1', '500000', '1234567890', 'BCA', 'Jakarta',
             'John Doe', '11', '2023/2024',
             'James Doe', 'Jane Doe',
@@ -119,10 +119,10 @@ class StudentBulkImportController extends Controller
                         throw new \Exception("User with NIP '{$row[1]}' or username '{$row[2]}' already exists.");
                     }
 
-                    // Validate required fields
-                    if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4]) || empty($row[5]) || empty($row[6])) {
-                        throw new \Exception("Required user fields are missing.");
-                    }
+            // Validate required fields
+            if (empty($row[0]) || empty($row[1]) || empty($row[2]) || empty($row[3]) || empty($row[4])) {
+                throw new \Exception("Required user fields are missing.");
+            }
 
                     // Validate gender
                     if (!in_array(strtolower($row[4]), ['male', 'female'])) {
@@ -138,8 +138,7 @@ class StudentBulkImportController extends Controller
                             'email' => $row[3],
                             'password' => Hash::make(Str::random(8)), // Generate random password
                             'gender' => ucfirst(strtolower($row[4])), // Normalize gender
-                            'batch_id' => $row[5],
-                            'class_id' => $row[6]
+                            // Removed batch_id and class_id as columns do not exist
                         ]);
                         $user->save();
                     } catch (\Exception $e) {

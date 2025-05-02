@@ -67,22 +67,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="batch_id">Batch</label>
-                                    <select class="form-control @error('batch_id') is-invalid @enderror" name="batch_id" required>
-                                        <option value="">Select Batch</option>
-                                        @foreach($batches as $batch)
-                                            <option value="{{ $batch->id }}" {{ old('batch_id', $user->batch_id) == $batch->id ? 'selected' : '' }}>
-                                                {{ $batch->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('batch_id')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                            <!-- Batch field removed -->
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="gender">Gender</label>
