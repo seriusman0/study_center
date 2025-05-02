@@ -22,9 +22,6 @@ class AttendanceController extends Controller
             ->whereHas('studentDetail', function ($query) {
                 $query->where('is_active', true);
             })
-            ->withCount(['permissionRequests as approved_permissions_count' => function ($query) {
-                $query->where('status', 'approved');
-            }])
             ->paginate(15);
 
         return view('admin.attendance.index', compact('students'));
@@ -50,7 +47,6 @@ class AttendanceController extends Controller
         $headers = [
             'NO', 'ID', 'NAME', 'RECORD DATE',
             'HADIR REG', 'HADIR CSS', 'HADIR CGG',
-            'JOURNAL ENTRY', 'PERMISSION',
             'SPR FATHER', 'SPR MOTHER', 'SPR SIBLING'
         ];
 
@@ -70,11 +66,6 @@ class AttendanceController extends Controller
         foreach ($students as $index => $student) {
             $rowIndex = $index + 2; // Start from row 2
             
-            // Calculate excused absences count from PermissionRequest model
-            $excusedCount = \App\Models\PermissionRequest::where('user_id', $student->id)
-                ->where('status', 'approved')
-                ->count();
-            
             // Set student data
             $sheet->setCellValue('A' . $rowIndex, $index + 1);    // NO
             $sheet->setCellValue('B' . $rowIndex, $student->id);   // ID
@@ -85,11 +76,9 @@ class AttendanceController extends Controller
             $sheet->setCellValue('E' . $rowIndex, $student->attendanceRecord->regular_attendance ?? 0);
             $sheet->setCellValue('F' . $rowIndex, $student->attendanceRecord->css_attendance ?? 0);
             $sheet->setCellValue('G' . $rowIndex, $student->attendanceRecord->cgg_attendance ?? 0);
-            $sheet->setCellValue('H' . $rowIndex, $student->attendanceRecord->journal_entry ?? 0);
-            $sheet->setCellValue('I' . $rowIndex, $student->attendanceRecord->permission ?? 0);
-            $sheet->setCellValue('J' . $rowIndex, $student->attendanceRecord->spr_father ?? 0);
-            $sheet->setCellValue('K' . $rowIndex, $student->attendanceRecord->spr_mother ?? 0);
-            $sheet->setCellValue('L' . $rowIndex, $student->attendanceRecord->spr_sibling ?? 0);
+            $sheet->setCellValue('H' . $rowIndex, $student->attendanceRecord->spr_father ?? 0);
+            $sheet->setCellValue('I' . $rowIndex, $student->attendanceRecord->spr_mother ?? 0);
+            $sheet->setCellValue('J' . $rowIndex, $student->attendanceRecord->spr_sibling ?? 0);
 
             // Add date validation for record_date column (D)
             $dateValidation = $sheet->getCell('D' . $rowIndex)->getDataValidation();
@@ -103,8 +92,8 @@ class AttendanceController extends Controller
             $dateValidation->setPromptTitle('Date');
             $dateValidation->setPrompt('Enter date in YYYY-MM-DD format');
 
-            // Add data validation for numeric values for columns E to L
-            foreach (range(4, 11) as $colIndex) {
+            // Add data validation for numeric values for columns E to J
+            foreach (range(4, 9) as $colIndex) {
                 $column = chr(65 + $colIndex);
                 $validation = $sheet->getCell($column . $rowIndex)->getDataValidation();
                 $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_WHOLE);
@@ -130,7 +119,7 @@ class AttendanceController extends Controller
         }
 
         // Style the header row
-        $sheet->getStyle('A1:L1')->applyFromArray([
+        $sheet->getStyle('A1:J1')->applyFromArray([
             'font' => [
                 'bold' => true,
                 'color' => ['rgb' => 'FFFFFF'],
@@ -191,7 +180,7 @@ class AttendanceController extends Controller
                     }
 
                     // Validate numeric values (skipping the record_date column)
-                    foreach ([4, 5, 6, 7, 8, 9, 10, 11] as $index) {
+                    foreach ([4, 5, 6, 7, 8, 9] as $index) {
                         if (!is_numeric($row[$index])) {
                             throw new \Exception("Column " . ($index + 1) . " must be a numeric value.");
                         }
@@ -208,11 +197,9 @@ class AttendanceController extends Controller
                         'regular_attendance' => (int)$row[4],
                         'css_attendance' => (int)$row[5],
                         'cgg_attendance' => (int)$row[6],
-                        'journal_entry' => (int)$row[7],
-                        'permission' => (int)$row[8],
-                        'spr_father' => (int)$row[9],
-                        'spr_mother' => (int)$row[10],
-                        'spr_sibling' => (int)$row[11],
+                        'spr_father' => (int)$row[7],
+                        'spr_mother' => (int)$row[8],
+                        'spr_sibling' => (int)$row[9],
                         'notes' => null
                     ]);
 
@@ -284,8 +271,9 @@ class AttendanceController extends Controller
             'regular_attendance' => 'required|integer|min:0',
             'css_attendance' => 'required|integer|min:0',
             'cgg_attendance' => 'required|integer|min:0',
-            'excused_absences' => 'required|integer|min:0',
-            'journal_entry' => 'required|integer|min:0',
+            'spr_father' => 'required|integer|min:0',
+            'spr_mother' => 'required|integer|min:0',
+            'spr_sibling' => 'required|integer|min:0',
             'record_date' => 'required|date',
             'notes' => 'nullable|string'
         ]);

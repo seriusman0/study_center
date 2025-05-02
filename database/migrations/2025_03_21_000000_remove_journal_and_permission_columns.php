@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('attendance_records', function (Blueprint $table) {
+            // Drop only journal and permission columns
+            $table->dropColumn([
+                'journal_entry',
+                'permission'
+            ]);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('attendance_records', function (Blueprint $table) {
+            // Re-add the columns if needed to rollback
+            $table->integer('journal_entry')->default(0);
+            $table->integer('permission')->default(0);
+        });
+    }
+};
