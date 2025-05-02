@@ -22,6 +22,9 @@ class AttendanceController extends Controller
             ->whereHas('studentDetail', function ($query) {
                 $query->where('is_active', true);
             })
+            ->withCount(['permissionRequests as approved_permissions_count' => function ($query) {
+                $query->where('status', 'approved');
+            }])
             ->paginate(15);
 
         return view('admin.attendance.index', compact('students'));
@@ -47,7 +50,7 @@ class AttendanceController extends Controller
         $headers = [
             'NO', 'ID', 'NAME', 
             'HADIR REG', 'HADIR BHS', 'HADIR CSS', 'HADIR CGG',
-            'JOURNAL ENTRY', 'PERMISSION',
+            'JOURNAL ENTRY', 'EXCUSED',
             'SPR FATHER', 'SPR MOTHER', 'SPR SIBLING'
         ];
 
@@ -58,8 +61,8 @@ class AttendanceController extends Controller
             $sheet->getColumnDimension($column)->setWidth(15);
         }
 
-        // Get all active students
-        $students = User::with('studentDetail')
+        // Get all active students with attendanceRecord eager loaded
+        $students = User::with(['studentDetail', 'attendanceRecord'])
             ->active()
             ->get();
 
@@ -67,17 +70,29 @@ class AttendanceController extends Controller
         foreach ($students as $index => $student) {
             $rowIndex = $index + 2; // Start from row 2
             
+            // Calculate excused absences count from PermissionRequest model
+            $excusedCount = \App\Models\PermissionRequest::where('user_id', $student->id)
+                ->where('status', 'approved')
+                ->count();
+            
             // Set student data
             $sheet->setCellValue('A' . $rowIndex, $index + 1);    // NO
             $sheet->setCellValue('B' . $rowIndex, $student->id);   // ID
             $sheet->setCellValue('C' . $rowIndex, $student->nama); // NAME
             
-            // Set empty cells for attendance data with validation
-            for ($col = 3; $col <= 11; $col++) {
-                $column = chr(65 + $col);
-                $sheet->setCellValue($column . $rowIndex, '0');
-                
-                // Add data validation for numeric values
+            // Set attendance data cells with actual values or 0
+            $sheet->setCellValue('D' . $rowIndex, $student->attendanceRecord->regular_attendance ?? 0);
+            $sheet->setCellValue('E' . $rowIndex, $student->attendanceRecord->css_attendance ?? 0);
+            $sheet->setCellValue('F' . $rowIndex, $student->attendanceRecord->cgg_attendance ?? 0);
+            $sheet->setCellValue('G' . $rowIndex, $student->attendanceRecord->journal_entry ?? 0);
+            $sheet->setCellValue('H' . $rowIndex, $excusedCount);
+            $sheet->setCellValue('I' . $rowIndex, $student->attendanceRecord->spr_father ?? 0);
+            $sheet->setCellValue('J' . $rowIndex, $student->attendanceRecord->spr_mother ?? 0);
+            $sheet->setCellValue('K' . $rowIndex, $student->attendanceRecord->spr_sibling ?? 0);
+
+            // Add data validation for numeric values for columns D to K
+            foreach (range(3, 10) as $colIndex) {
+                $column = chr(65 + $colIndex);
                 $validation = $sheet->getCell($column . $rowIndex)->getDataValidation();
                 $validation->setType(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::TYPE_WHOLE);
                 $validation->setErrorStyle(\PhpOffice\PhpSpreadsheet\Cell\DataValidation::STYLE_STOP);

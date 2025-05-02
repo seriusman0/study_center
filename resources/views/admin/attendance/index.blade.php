@@ -56,7 +56,7 @@
                                     <td>{{ optional($student->attendanceRecord)->css_attendance ?? 0 }}</td>
                                     <td>{{ optional($student->attendanceRecord)->cgg_attendance ?? 0 }}</td>
                                     <td>{{ optional($student->attendanceRecord)->journal_entry ?? 0 }}</td>
-                                    <td>{{ optional($student->attendanceRecord)->excused_absences ?? 0 }}</td>
+                                    <td>{{ $student->approved_permissions_count ?? 0 }}</td>
                                     <td colspan="3">
                                         @if($student->attendanceRecord)
                                             <small class="text-muted">Last updated: {{ $student->attendanceRecord->updated_at->format('Y-m-d H:i') }}</small>

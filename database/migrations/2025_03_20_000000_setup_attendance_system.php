@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('regular_attendance')->default(0);
             $table->integer('css_attendance')->default(0);
             $table->integer('cgg_attendance')->default(0);
-            $table->integer('excused_absences')->default(0);
+            // Removed excused_absences column as it will be calculated dynamically
             
             // Journal entry tracking
             $table->integer('journal_entry')->default(0);

@@ -15,7 +15,7 @@ class AttendanceRecord extends Model
         'css_attendance',
         'cgg_attendance',
         'total_sessions',
-        'excused_absences',
+        // Removed excused_absences from fillable
         'journal_entry',
         'permission',
         'spr_father',
@@ -28,7 +28,7 @@ class AttendanceRecord extends Model
         'css_attendance' => 'integer',
         'cgg_attendance' => 'integer',
         'total_sessions' => 'integer',
-        'excused_absences' => 'integer',
+        // Removed excused_absences from casts
         'journal_entry' => 'integer',
         'permission' => 'integer',
         'spr_father' => 'integer',
@@ -41,7 +41,7 @@ class AttendanceRecord extends Model
         'css_attendance' => 0,
         'cgg_attendance' => 0,
         'total_sessions' => 0,
-        'excused_absences' => 0,
+        // Removed excused_absences from attributes
         'journal_entry' => 0,
         'permission' => 0,
         'spr_father' => 0,
@@ -49,11 +49,23 @@ class AttendanceRecord extends Model
         'spr_sibling' => 0
     ];
 
+
     /**
      * Relationship with User
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the excused absences count dynamically from approved permission requests
+     */
+    public function getExcusedAbsencesAttribute()
+    {
+        if (!$this->user) {
+            return 0;
+        }
+        return $this->user->permissionRequests()->where('status', 'approved')->count();
     }
 }

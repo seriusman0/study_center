@@ -40,7 +40,9 @@ class PermissionRequestController extends Controller
         $validated['user_id'] = auth()->id();
         $validated['status'] = 'pending';
 
-        PermissionRequest::create($validated);
+        $permissionRequest = PermissionRequest::create($validated);
+
+      
 
         return redirect()
             ->route('student.permissions.index')
