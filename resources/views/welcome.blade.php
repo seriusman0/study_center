@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2C3E50;
@@ -114,20 +116,36 @@
                 <h1 class="brand-title display-4">Selamat Datang di Study Center!</h1>
             </div>
 
-            <!-- Blog Section -->
-            <div class="row justify-content-center mb-5" id="blog-section">
+            <!-- Payment Proof Search Section -->
+            <div class="row justify-content-center mb-5" id="payment-search-section">
                 <div class="col-lg-6">
-                    <div class="card shadow-sm">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">Search Payment Proof Files</h5>
+                        </div>
                         <div class="card-body">
                             <form action="{{ route('files.search') }}" method="GET">
                                 <div class="mb-3">
-                                    <label for="nip" class="form-label fw-bold">NIP:</label>
-                                    <input type="number" class="form-control" id="nip" name="nip" required>
+                                    <label for="nip" class="form-label fw-bold">Enter your NIP:</label>
+                                    <input type="number" 
+                                           class="form-control form-control-lg" 
+                                           id="nip" 
+                                           name="nip" 
+                                           placeholder="e.g., 123456789"
+                                           required>
+                                    <div class="form-text text-muted">
+                                        Enter your NIP to view your payment proof files
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Search</button>
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="fas fa-search me-2"></i>Search Files
+                                </button>
                             </form>
                             @if(session('error'))
-                                <div class="alert alert-danger mt-3">{{ session('error') }}</div>
+                                <div class="alert alert-danger mt-3">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    {{ session('error') }}
+                                </div>
                             @endif
                         </div>
                     </div>
