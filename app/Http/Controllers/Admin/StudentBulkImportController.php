@@ -50,7 +50,7 @@ class StudentBulkImportController extends Controller
             // User Information
             'Nama*', 'NIP*', 'Username*', 'Email*', 'Gender*',
             // Student Details
-            'Address', 'Phone', 'Birth Date', 'Birth Place',
+            'Class*', 'Batch*', 'Address', 'Phone', 'Birth Date', 'Birth Place',
             'Sekolah', 'SPP', 'No Rekening', 'Nama Bank', 
             'Cabang Bank', 'Pemilik Rekening', 'Tingkat Kelas', 
             'Tahun Ajaran', 'Nominal SPP Default',
@@ -75,6 +75,7 @@ class StudentBulkImportController extends Controller
         // Add sample data
         $sampleData = [
             'John Doe', '12345', 'johndoe', 'johndoe@example.com', 'male',
+            '7', '1', // Default class and batch
             'Jl. Sample', '08123456789', '2000-01-01', 'Jakarta',
             'SMA Negeri 1', '500000', '1234567890', 'BCA',
             'Jakarta', 'John Doe', '11', '2023/2024', '500000',
@@ -109,6 +110,8 @@ class StudentBulkImportController extends Controller
         $sheet->setCellValue('A7', '3. Birth Date should be in YYYY-MM-DD format');
         $sheet->setCellValue('A8', '4. SPP and Nominal SPP Default should be numeric');
         $sheet->setCellValue('A9', '5. Username and NIP must be unique');
+        $sheet->setCellValue('A10', '6. Class defaults to 7 if not specified');
+        $sheet->setCellValue('A11', '7. Batch defaults to 1 if not specified');
 
         // Create the file
         $writer = new Xlsx($spreadsheet);
@@ -169,59 +172,61 @@ class StudentBulkImportController extends Controller
                         'password' => Hash::make(Str::random(8)), // Generate random password
                     ]);
 
-                    // Create StudentDetail
+                    // Create StudentDetail with class and batch
                     StudentDetail::create([
                         'user_id' => $user->id,
-                        'address' => $row[5],
-                        'phone' => $row[6],
-                        'birth_date' => $row[7],
-                        'birth_place' => $row[8],
+                        'class' => $row[5] ?? 7, // Default to 7 if not specified
+                        'batch' => $row[6] ?? 1, // Default to 1 if not specified
+                        'address' => $row[7],
+                        'phone' => $row[8],
+                        'birth_date' => $row[9],
+                        'birth_place' => $row[10],
                         'gender' => strtolower($row[4]),
-                        'sekolah' => $row[9],
-                        'spp' => $row[10],
-                        'no_rekening' => $row[11],
-                        'nama_bank' => $row[12],
-                        'cabang_bank' => $row[13],
-                        'pemilik_rekening' => $row[14],
-                        'tingkat_kelas' => $row[15],
-                        'tahun_ajaran' => $row[16],
-                        'nominal_spp_default' => $row[17],
+                        'sekolah' => $row[11],
+                        'spp' => $row[12],
+                        'no_rekening' => $row[13],
+                        'nama_bank' => $row[14],
+                        'cabang_bank' => $row[15],
+                        'pemilik_rekening' => $row[16],
+                        'tingkat_kelas' => $row[17],
+                        'tahun_ajaran' => $row[18],
+                        'nominal_spp_default' => $row[19],
                         'is_active' => true
                     ]);
 
                     // Create Father if name is provided
-                    if (!empty($row[18])) {
+                    if (!empty($row[20])) {
                         FamilyMember::create([
                             'user_id' => $user->id,
-                            'name' => $row[18],
+                            'name' => $row[20],
                             'relationship' => 'father',
-                            'occupation' => $row[19] ?? null,
-                            'phone' => $row[20] ?? null,
-                            'address' => $row[21] ?? null
+                            'occupation' => $row[21] ?? null,
+                            'phone' => $row[22] ?? null,
+                            'address' => $row[23] ?? null
                         ]);
                     }
 
                     // Create Mother if name is provided
-                    if (!empty($row[22])) {
+                    if (!empty($row[24])) {
                         FamilyMember::create([
                             'user_id' => $user->id,
-                            'name' => $row[22],
+                            'name' => $row[24],
                             'relationship' => 'mother',
-                            'occupation' => $row[23] ?? null,
-                            'phone' => $row[24] ?? null,
-                            'address' => $row[25] ?? null
+                            'occupation' => $row[25] ?? null,
+                            'phone' => $row[26] ?? null,
+                            'address' => $row[27] ?? null
                         ]);
                     }
 
                     // Create Sibling if name is provided
-                    if (!empty($row[26])) {
+                    if (!empty($row[28])) {
                         FamilyMember::create([
                             'user_id' => $user->id,
-                            'name' => $row[26],
+                            'name' => $row[28],
                             'relationship' => 'sibling',
-                            'occupation' => $row[27] ?? null,
-                            'phone' => $row[28] ?? null,
-                            'address' => $row[29] ?? null
+                            'occupation' => $row[29] ?? null,
+                            'phone' => $row[30] ?? null,
+                            'address' => $row[31] ?? null
                         ]);
                     }
 

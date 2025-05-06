@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all(); // Removed batch relation loading
+        $users = User::all();
         return view('admin.users.index', compact('users'));
     }
 
@@ -30,6 +30,8 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             
             // Student details
+            'class' => 'required|integer|min:1',
+            'batch' => 'required|integer|min:1',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'birth_date' => 'required|date',
@@ -59,6 +61,8 @@ class UserController extends Controller
 
         // Create student details
         $user->studentDetail()->create([
+            'class' => $validatedData['class'],
+            'batch' => $validatedData['batch'],
             'address' => $validatedData['address'],
             'phone' => $validatedData['phone'],
             'birth_date' => $validatedData['birth_date'],
@@ -115,6 +119,8 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             
             // Student details
+            'class' => 'required|integer|min:1',
+            'batch' => 'required|integer|min:1',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'birth_date' => 'required|date',
@@ -141,7 +147,7 @@ class UserController extends Controller
         ];
 
         // Only update password if provided
-        if ($validatedData['password']) {
+        if (isset($validatedData['password'])) {
             $updateData['password'] = bcrypt($validatedData['password']);
         }
 
@@ -151,6 +157,8 @@ class UserController extends Controller
         $user->studentDetail()->updateOrCreate(
             ['user_id' => $user->id],
             [
+                'class' => $validatedData['class'],
+                'batch' => $validatedData['batch'],
                 'address' => $validatedData['address'],
                 'phone' => $validatedData['phone'],
                 'birth_date' => $validatedData['birth_date'],

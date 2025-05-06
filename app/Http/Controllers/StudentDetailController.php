@@ -39,6 +39,8 @@ class StudentDetailController extends Controller
             'address' => 'required|string',
             'birth_date' => 'required|date',
             'gender' => 'required|in:male,female',
+            'class' => 'required|integer|min:1',
+            'batch' => 'required|integer|min:1',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -63,6 +65,8 @@ class StudentDetailController extends Controller
             'address' => $request->address,
             'birth_date' => $request->birth_date,
             'gender' => $request->gender,
+            'class' => $request->class,
+            'batch' => $request->batch,
             'photo' => $photoName,
         ]);
 

@@ -81,6 +81,20 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="class">Class:</label>
+                            <input type="number" class="form-control" name="class" value="{{ old('class', $user->studentDetail->class ?? 7) }}" required>
+                            @error('class')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="batch">Batch:</label>
+                            <input type="number" class="form-control" name="batch" value="{{ old('batch', $user->studentDetail->batch ?? 1) }}" required>
+                            @error('batch')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="address">Address:</label>
                             <input type="text" class="form-control" name="address" value="{{ old('address', $user->studentDetail->address ?? '') }}" required>
                             @error('address')
@@ -94,6 +108,8 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="birth_date">Birth Date:</label>
                             <input type="date" class="form-control" name="birth_date" value="{{ old('birth_date', $user->studentDetail->birth_date ?? '') }}" required>
@@ -108,8 +124,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="gender">Gender:</label>
                             <select class="form-control" name="gender" required>
@@ -128,6 +142,10 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="tingkat_kelas">Grade Level:</label>
                             <input type="text" class="form-control" name="tingkat_kelas" value="{{ old('tingkat_kelas', $user->studentDetail->tingkat_kelas ?? '') }}">

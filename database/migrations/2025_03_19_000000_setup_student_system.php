@@ -11,25 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('classes')) {
-            Schema::create('classes', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->string('level');
-                $table->string('section')->nullable();
-                $table->string('academic_year');
-                $table->boolean('is_active')->default(true);
-                $table->timestamps();
-
-                $table->index('name');
-                $table->index('is_active');
-            });
-        }
-
         if (!Schema::hasTable('student_details')) {
             Schema::create('student_details', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->integer('class')->default(7);
+                $table->integer('batch')->default(1);
                 $table->string('address')->nullable();
                 $table->string('phone')->nullable();
                 $table->date('birth_date')->nullable();
@@ -51,6 +38,8 @@ return new class extends Migration
                 $table->timestamps();
 
                 $table->index('user_id');
+                $table->index('class');
+                $table->index('batch');
                 $table->index('gender');
                 $table->index('is_active');
             });

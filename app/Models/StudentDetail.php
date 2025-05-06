@@ -11,7 +11,8 @@ class StudentDetail extends Model
 
     protected $fillable = [
         'user_id',
-        'class_id',
+        'class',
+        'batch',
         'address',
         'phone',
         'birth_date',
@@ -31,7 +32,9 @@ class StudentDetail extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
-        'birth_date' => 'date'
+        'birth_date' => 'date',
+        'batch' => 'integer',
+        'class' => 'integer'
     ];
 
     /**
@@ -40,13 +43,5 @@ class StudentDetail extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Relationship with ClassRoom.
-     */
-    public function classRoom()
-    {
-        return $this->belongsTo(ClassRoom::class, 'class_id');
     }
 }

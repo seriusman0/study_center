@@ -24,6 +24,8 @@ class StudentSeeder extends Seeder
         // Create student details
         DB::table('student_details')->insert([
             'user_id' => $userId,
+            'class' => 7, // Default class value
+            'batch' => 1, // Default batch value
             'address' => 'Sample Address',
             'phone' => '1234567890',
             'birth_date' => '2000-01-01',
@@ -40,7 +42,6 @@ class StudentSeeder extends Seeder
             'regular_attendance' => 0,
             'css_attendance' => 0,
             'cgg_attendance' => 0,
-            // Removed excused_absences as column no longer exists
             'journal_entry' => 0,
             'record_date' => now(),
             'created_at' => now(),
