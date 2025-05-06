@@ -78,10 +78,16 @@ Route::prefix('admin')->group(function () {
             ->names('admin.permissions');
 
         // Journal Management Routes
+        Route::get('journals/download-all', [App\Http\Controllers\Admin\JournalController::class, 'downloadAll'])
+            ->name('admin.journals.download-all');
         Route::get('journals/statistics', [App\Http\Controllers\Admin\JournalController::class, 'statistics'])
             ->name('admin.journals.statistics');
         Route::get('journals/entry/{journal}', [App\Http\Controllers\Admin\JournalController::class, 'entryShow'])
             ->name('admin.journals.entry-show');
+        Route::get('journals/{id}/preview', [App\Http\Controllers\Admin\JournalController::class, 'preview'])
+            ->name('admin.journals.preview');
+        Route::get('journals/{id}/download', [App\Http\Controllers\Admin\JournalController::class, 'download'])
+            ->name('admin.journals.download');
         Route::resource('journals', App\Http\Controllers\Admin\JournalController::class)->names('admin.journals');
 
         // Batch Management Routes

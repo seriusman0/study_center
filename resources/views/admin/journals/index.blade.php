@@ -11,8 +11,11 @@
     @endif
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title">Students and Their Latest Journals</h3>
+            <a href="{{ route('admin.journals.download-all') }}" class="btn btn-success">
+                <i class="fas fa-download"></i> Download All Journals
+            </a>
         </div>
         <div class="card-body">
             @if($students->count() > 0)
@@ -44,7 +47,17 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.journals.show', $student->id) }}" class="btn btn-primary btn-sm">View Journals</a>
+                                    <div class="btn-group">
+                                        <a href="{{ route('admin.journals.show', $student->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="{{ route('admin.journals.preview', $student->id) }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-file-alt"></i> Preview
+                                        </a>
+                                        <a href="{{ route('admin.journals.download', $student->id) }}" class="btn btn-success btn-sm">
+                                            <i class="fas fa-download"></i> Download
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

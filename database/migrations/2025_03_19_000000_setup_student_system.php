@@ -11,6 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasTable('classes')) {
+            Schema::create('classes', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('level');
+                $table->string('section')->nullable();
+                $table->string('academic_year');
+                $table->boolean('is_active')->default(true);
+                $table->timestamps();
+
+                $table->index('name');
+                $table->index('is_active');
+            });
+        }
+
         if (!Schema::hasTable('student_details')) {
             Schema::create('student_details', function (Blueprint $table) {
                 $table->id();

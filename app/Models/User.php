@@ -61,9 +61,9 @@ class User extends Authenticatable
     /**
      * Get the attendance record associated with the user.
      */
-    public function attendanceRecord()
+    public function attendanceRecords()
     {
-        return $this->hasOne(AttendanceRecord::class);
+        return $this->hasMany(AttendanceRecord::class);
     }
 
     /**
