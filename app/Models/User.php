@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->hasMany(FamilyMember::class);
     }
 
+    public function paymentProofs()
+    {
+        return $this->hasMany(PaymentProof::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->whereHas('studentDetail', function($q) {

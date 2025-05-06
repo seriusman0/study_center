@@ -202,7 +202,9 @@
 <!-- Scripts -->
 <script src="{{ asset('assets/admin/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('assets/admin/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 <script src="{{ asset('assets/admin/dist/js/adminlte.min.js') }}"></script>
 @livewireScripts
+@stack('scripts')
 </body>
 </html>

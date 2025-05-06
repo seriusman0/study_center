@@ -3,21 +3,80 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\User;
+use App\Models\PaymentProof;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class JournalStatistics extends Component
 {
+    use WithFileUploads;
+
     public $classRange = '7-9'; // Default value
     public $totalClasses = 3; // Default value
     public $selectedPeriod; // For storing selected period
+    
+    // Upload related properties
+    public $selectedStudent = null;
+    public $paymentFile;
+    public $notes;
+    public $showUploadModal = false;
     private const TOTAL_EXPECTED_JOURNALS = 25; // Total expected journals
     private const MAX_SPP_DEFAULT = 700000; // Maximum SPP default value
     
+    protected $rules = [
+        'paymentFile' => 'required|file|max:2048|mimes:jpg,jpeg,png,pdf',
+        'notes' => 'nullable|string|max:500',
+    ];
+
     public function mount()
     {
         // Set default period to current month and year
         $this->selectedPeriod = now()->format('Y-m');
+    }
+
+    public function openUploadModal($studentId)
+    {
+        $this->selectedStudent = $studentId;
+        $this->resetUploadForm();
+        $this->dispatch('openModal');
+    }
+
+    public function closeUploadModal()
+    {
+        $this->resetUploadForm();
+        $this->dispatch('closeModal');
+    }
+
+    public function resetUploadForm()
+    {
+        $this->paymentFile = null;
+        $this->notes = null;
+        $this->resetValidation();
+    }
+
+    public function uploadPaymentProof()
+    {
+        $this->validate();
+
+        try {
+            $path = $this->paymentFile->store('payment-proofs', 'public');
+            $fileType = $this->paymentFile->getClientOriginalExtension() === 'pdf' ? 'pdf' : 'image';
+
+            PaymentProof::create([
+                'user_id' => $this->selectedStudent,
+                'file_path' => $path,
+                'file_type' => $fileType,
+                'notes' => $this->notes,
+                'period' => $this->selectedPeriod
+            ]);
+
+            session()->flash('message', 'Payment proof uploaded successfully.');
+            $this->closeUploadModal();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to upload payment proof. Please try again.');
+        }
     }
 
     public function getPeriodsProperty()
@@ -57,7 +116,10 @@ class JournalStatistics extends Component
             'permissionRequests' => function($query) use ($periodStart, $periodEnd) {
                 $query->whereBetween('created_at', [$periodStart, $periodEnd]);
             },
-            'studentDetail'
+            'studentDetail',
+            'paymentProofs' => function($query) {
+                $query->where('period', $this->selectedPeriod);
+            }
         ])
         ->whereHas('studentDetail', function($query) use ($minClass, $maxClass) {
             $query->whereBetween('class', [$minClass, $maxClass]);
@@ -134,7 +196,8 @@ class JournalStatistics extends Component
                 // Appreciation status
                 'has_appreciation' => $hasAppreciation,
                 // Final payment
-                'final_payment' => $finalPayment
+                'final_payment' => $finalPayment,
+                'payment_proof' => $student->paymentProofs->first()
             ];
         });
 
