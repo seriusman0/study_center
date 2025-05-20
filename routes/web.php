@@ -17,14 +17,17 @@ Route::prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
         
         // Journal Routes
-        Route::resource('journals', App\Http\Controllers\Student\JournalController::class)->names('journals');
+        Route::resource('journals', App\Http\Controllers\Student\JournalController::class)
+            ->names('journals')
+            ->only(['index', 'create', 'store', 'show', 'destroy']);
         Route::post('journals/store-image', [App\Http\Controllers\Student\JournalController::class, 'storeImage'])
             ->name('journals.store-image');
         
         // Permission Request Routes
         Route::resource('permissions', App\Http\Controllers\Student\PermissionRequestController::class)
             ->except(['edit', 'update'])
-            ->names('permissions');
+            ->names('permissions')
+            ->only(['index', 'create', 'store', 'show', 'destroy']);
     });
 });
 

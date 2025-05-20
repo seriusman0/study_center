@@ -68,7 +68,7 @@ class JournalController extends Controller
         $journal->is_submitted = true;
         $journal->save();
 
-        return redirect()->route('student.journals.index')
+        return redirect()->route('student.dashboard')
             ->with('success', 'Journal entry submitted successfully.');
     }
 

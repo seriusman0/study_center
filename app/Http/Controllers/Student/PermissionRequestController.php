@@ -42,11 +42,7 @@ class PermissionRequestController extends Controller
 
         $permissionRequest = PermissionRequest::create($validated);
 
-      
-
-        return redirect()
-            ->route('student.permissions.index')
-            ->with('success', 'Permission request submitted successfully.');
+        return redirect()->route('student.dashboard')->with('success', 'Permission request submitted successfully.');
     }
 
     public function show(PermissionRequest $permission)
