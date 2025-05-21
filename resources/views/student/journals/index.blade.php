@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Jurnal Saya | Pusat Studi')
+@section('title', 'Jurnal Saya | Study Center')
 
 @section('content')
     <!-- Pesan Sukses -->

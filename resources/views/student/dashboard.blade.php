@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Dasbor Siswa | Study Center')
+@section('title', 'Dashboard Siswa | Study Center')
 
 @section('content')
     <!-- Selamat Datang -->

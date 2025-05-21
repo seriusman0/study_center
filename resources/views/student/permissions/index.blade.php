@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Permintaan Izin Saya | Pusat Studi')
+@section('title', 'Permintaan Izin Saya | Study Center')
 
 @section('content')
     @if(session('success'))

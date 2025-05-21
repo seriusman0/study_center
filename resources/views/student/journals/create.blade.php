@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Buat Entri Jurnal | Pusat Studi')
+@section('title', 'Buat Entri Jurnal | Study Center')
 
 @section('content')
     <div class="row gx-4 gx-lg-5">

@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Detail Permintaan Izin | Pusat Studi')
+@section('title', 'Detail Permintaan Izin | Study Center')
 
 @section('content')
     <div class="detail-container">

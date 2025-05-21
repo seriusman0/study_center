@@ -1,6 +1,6 @@
 @extends('layouts.student')
 
-@section('title', 'Permintaan Izin | Pusat Studi')
+@section('title', 'Permintaan Izin | Study Center')
 
 @section('content')
     <div class="form-container">
