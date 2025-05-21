@@ -19,7 +19,7 @@ Route::prefix('student')->name('student.')->group(function () {
         // Journal Routes
         Route::resource('journals', App\Http\Controllers\Student\JournalController::class)
             ->names('journals')
-            ->only(['index', 'create', 'store', 'show', 'destroy']);
+            ->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
         Route::post('journals/store-image', [App\Http\Controllers\Student\JournalController::class, 'storeImage'])
             ->name('journals.store-image');
         

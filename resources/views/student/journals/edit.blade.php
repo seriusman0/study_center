@@ -1,13 +1,13 @@
 @extends('layouts.student')
 
-@section('title', 'Edit Journal Entry | Study Center')
+@section('title', 'Edit Entri Jurnal | Pusat Studi')
 
 @section('content')
     <div class="row gx-4 gx-lg-5">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="ard-title">Edit Journal Entry</h4>
+                    <h4 class="card-title">Edit Entri Jurnal</h4>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('student.journals.update', $journal->id) }}" method="POST" enctype="multipart/form-data" id="journalForm">
@@ -129,7 +129,7 @@
 
                         <!-- Selfie with Parents -->
                         <div class="mb-4">
-                            <label class="form-label">Selfie with Parents *</label>
+                            <label class="form-label">Selfie dengan Orang Tua *</label>
                             <div class="row">
                                 <div class="col-md-6">
                                     <!-- File Upload -->
@@ -143,7 +143,7 @@
                                 <div class="col-md-6">
                                     <!-- Camera Capture -->
                                     <button type="button" class="btn btn-secondary" id="openCamera">
-                                        <i class="fas fa-camera"></i> Take Photo
+                                        <i class="fas fa-camera"></i> Ambil Foto
                                     </button>
                                 </div>
                             </div>
@@ -158,7 +158,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Take Photo</h5>
+                                        <h5 class="modal-title">Ambil Foto</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
@@ -166,16 +166,16 @@
                                         <canvas id="canvas" style="display:none;"></canvas>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary" id="capture">Capture</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <button type="button" class="btn btn-primary" id="capture">Ambil</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Update Journal</button>
-                            <a href="{{ route('student.journals.index') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Perbarui Jurnal</button>
+                            <a href="{{ route('student.journals.index') }}" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
                 </div>

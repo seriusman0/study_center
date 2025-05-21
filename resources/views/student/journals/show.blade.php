@@ -1,24 +1,24 @@
 @extends('layouts.student')
 
-@section('title', 'View Journal Entry | Study Center')
+@section('title', 'Lihat Entri Jurnal | Pusat Studi')
 
 @section('content')
     <div class="row gx-4 gx-lg-5">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">Journal Entry - {{ $journal->entry_date->format('d F Y') }}</h4>
+                    <h4 class="card-title mb-0">Entri Jurnal - {{ $journal->entry_date->format('d F Y') }}</h4>
                     <a href="{{ route('student.journals.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to List
+                        <i class="fas fa-arrow-left"></i> Kembali ke Daftar
                     </a>
                 </div>
                 <div class="card-body">
                     <!-- Status Badge -->
                     <div class="mb-4">
                         @if($journal->is_submitted)
-                            <span class="badge bg-success">Submitted</span>
+                            <span class="badge bg-success">Dikirim</span>
                         @else
-                            <span class="badge bg-warning">Draft</span>
+                            <span class="badge bg-warning">Draf</span>
                         @endif
                     </div>
 
@@ -105,9 +105,9 @@
 
                     <!-- Selfie Image -->
                     <div class="mb-4">
-                        <h5>Selfie with Parents</h5>
+                        <h5>Selfie dengan Orang Tua</h5>
                         <img src="{{ Storage::url($journal->selfie_image) }}" 
-                             alt="Selfie with Parents" 
+                             alt="Selfie dengan Orang Tua" 
                              class="img-fluid rounded" 
                              style="max-width: 400px;">
                     </div>
@@ -115,7 +115,7 @@
                     <!-- Submission Details -->
                     <div class="mt-4 pt-4 border-top">
                         <small class="text-muted">
-                            Submitted on: {{ $journal->created_at->format('d F Y, H:i') }}
+                            Dikirim pada: {{ $journal->created_at->format('d F Y, H:i') }}
                         </small>
                     </div>
                 </div>

@@ -1,13 +1,13 @@
 @extends('layouts.student')
 
-@section('title', 'My Journals | Study Center')
+@section('title', 'Jurnal Saya | Pusat Studi')
 
 @section('content')
-    <!-- Success Message -->
+    <!-- Pesan Sukses -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
         </div>
     @endif
 
@@ -15,18 +15,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0">My Journal Entries</h4>
+                    <h4 class="card-title mb-0">Entri Jurnal Saya</h4>
                     <a href="{{ route('student.journals.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> New Entry
+                        <i class="fas fa-plus"></i> Entri Baru
                     </a>
                 </div>
                 <div class="card-body">
                     @if($journals->isEmpty())
                         <div class="text-center py-5">
                             <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-3">You haven't created any journal entries yet.</p>
+                            <p class="text-muted mb-3">Anda belum membuat entri jurnal apapun.</p>
                             <a href="{{ route('student.journals.create') }}" class="btn btn-primary">
-                                Create Your First Entry
+                                Buat Entri Pertama Anda
                             </a>
                         </div>
                     @else
@@ -34,10 +34,10 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Activities</th>
+                                        <th>Tanggal</th>
+                                        <th>Kegiatan</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,24 +65,24 @@
                                             </td>
                                             <td>
                                                 @if($journal->is_submitted)
-                                                    <span class="badge bg-success">Submitted</span>
+                                                    <span class="badge bg-success">Dikirim</span>
                                                 @else
-                                                    <span class="badge bg-warning">Draft</span>
+                                                    <span class="badge bg-warning">Draf</span>
                                                 @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('student.journals.show', $journal) }}" 
-                                                   class="btn btn-sm btn-info" title="View">
+                                                   class="btn btn-sm btn-info" title="Lihat">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <a href="{{ route('student.journals.edit', $journal) }}" 
-                                                   class="btn btn-sm btn-warning" title="Edit">
+                                                   class="btn btn-sm btn-warning" title="Ubah">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('student.journals.destroy', $journal) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this journal entry?');">
+                                                <form action="{{ route('student.journals.destroy', $journal) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus entri jurnal ini?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -95,7 +95,7 @@
 
                         <!-- Pagination -->
                         <div class="d-flex justify-content-center mt-4">
-                            {{ $journals->links() }}
+                            {{ $journals->links('vendor.pagination.bootstrap-5') }}
                         </div>
                     @endif
                 </div>
