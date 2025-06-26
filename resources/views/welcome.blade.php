@@ -102,7 +102,7 @@
                 <div class="col-lg-8">
                     <div class="video-container">
                         <iframe 
-                            src="https://www.youtube.com/embed/Q4USmWT0JCA?si=ihLzFE4FcUIRMS2k" 
+                            src="https://www.youtube.com/embed/qsEYdvoX3Bc" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
