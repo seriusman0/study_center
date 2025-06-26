@@ -44,7 +44,7 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
-                    <!-- Add more menu items here -->
+                    <!-- Removed File Management section -->
                 </ul>
             </nav>
         </div>

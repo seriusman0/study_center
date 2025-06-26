@@ -31,8 +31,6 @@ Route::prefix('student')->name('student.')->group(function () {
     });
 });
 
-Route::get('files/search', [App\Http\Controllers\Admin\FileController::class, 'search'])->name('files.search');
-
 Route::prefix('admin')->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login']);
@@ -51,8 +49,6 @@ Route::prefix('admin')->group(function () {
         Route::get('students/bulk-import/template', [App\Http\Controllers\Admin\StudentBulkImportController::class, 'downloadTemplate'])->name('admin.students.bulk-import.template');
         Route::post('students/bulk-import', [App\Http\Controllers\Admin\StudentBulkImportController::class, 'import'])->name('admin.students.bulk-import.process');
         Route::resource('admins', App\Http\Controllers\Admin\AdminController::class)->names('admin.admins');
-        Route::resource('files', App\Http\Controllers\Admin\FileController::class)->names('admin.files');
-        Route::get('files/{file}/view', [App\Http\Controllers\Admin\FileController::class, 'view'])->name('admin.files.view');
         
         // Scholarship Management Routes
         Route::resource('scholarships', App\Http\Controllers\Admin\ScholarshipController::class)

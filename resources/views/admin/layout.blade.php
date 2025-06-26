@@ -143,14 +143,6 @@
             </ul>
           </li>
 
-          <!-- File Management -->
-          <li class="nav-item">
-            <a href="{{ route('admin.files.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-file-alt"></i>
-              <p>File Management</p>
-            </a>
-          </li>
-
           <!-- Admin Management -->
           <li class="nav-item">
             <a href="{{ route('admin.admins.index') }}" class="nav-link">
