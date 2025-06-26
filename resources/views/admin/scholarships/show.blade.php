@@ -136,19 +136,19 @@
                                         <input type="checkbox" class="custom-control-input" id="fatherSpr" 
                                                name="father_spr_submitted" value="1"
                                                {{ optional($user->scholarship)->father_spr_submitted ? 'checked' : '' }}>
-                                        <label class="custom-control-label" for="fatherSpr">SPR Ayah</label>
+                                        <label class="custom-control-label" for="fatherSpr">CGG Ayah</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="motherSpr" 
                                                name="mother_spr_submitted" value="1"
                                                {{ optional($user->scholarship)->mother_spr_submitted ? 'checked' : '' }}>
-                                        <label class="custom-control-label" for="motherSpr">SPR Ibu</label>
+                                        <label class="custom-control-label" for="motherSpr">CGG Ibu</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="siblingSpr" 
                                                name="sibling_spr_submitted" value="1"
                                                {{ optional($user->scholarship)->sibling_spr_submitted ? 'checked' : '' }}>
-                                        <label class="custom-control-label" for="siblingSpr">SPR Saudara</label>
+                                        <label class="custom-control-label" for="siblingSpr">CGG Saudara</label>
                                     </div>
                                 </div>
 

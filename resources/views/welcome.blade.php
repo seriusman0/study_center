@@ -102,7 +102,7 @@
                 <div class="col-lg-8">
                     <div class="video-container">
                         <iframe 
-                            src="https://www.youtube.com/embed/ZZ887OrAl38" 
+                            src="https://www.youtube.com/embed/Q4USmWT0JCA?si=ihLzFE4FcUIRMS2k" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
@@ -124,7 +124,7 @@
                             <h5 class="mb-0">Search Payment Proof Files</h5>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('files.search') }}" method="GET">
+                            <form action="" method="GET">
                                 <div class="mb-3">
                                     <label for="nip" class="form-label fw-bold">Enter your NIP:</label>
                                     <input type="number" 

@@ -194,15 +194,15 @@
                             <td>{{ $attendanceRecord->permission ?? 0 }}</td>
                         </tr>
                         <tr>
-                            <th>SPR Ayah</th>
+                            <th>CGG Ayah</th>
                             <td>{{ $attendanceRecord->spr_father ?? 0 }}</td>
                         </tr>
                         <tr>
-                            <th>SPR Ibu</th>
+                            <th>CGG Ibu</th>
                             <td>{{ $attendanceRecord->spr_mother ?? 0 }}</td>
                         </tr>
                         <tr>
-                            <th>SPR Saudara</th>
+                            <th>CGG Saudara</th>
                             <td>{{ $attendanceRecord->spr_sibling ?? 0 }}</td>
                         </tr>
                     </table>

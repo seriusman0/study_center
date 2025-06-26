@@ -6,6 +6,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Payment Proof Search Route (Public Access)
+Route::get('/files/search', [App\Http\Controllers\PaymentProofSearchController::class, 'search'])->name('files.search');
+
 // Student Routes
 Route::prefix('student')->name('student.')->group(function () {
     Route::get('/login', [App\Http\Controllers\Student\AuthController::class, 'showLoginForm'])->name('login');
