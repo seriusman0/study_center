@@ -106,7 +106,7 @@
                             <p><strong>CGG Father:</strong> {{ $user->attendanceRecord->spr_father ?? 0 }}</p>
                             <p><strong>CGG Mother:</strong> {{ $user->attendanceRecord->spr_mother ?? 0 }}</p>
                             <p><strong>SPR Sibling:</strong> {{ $user->attendanceRecord->spr_sibling ?? 0 }}</p>
-                            <p><strong>Record Date:</strong> {{ $user->attendanceRecord->record_date ? date('d M Y', strtotime($user->attendanceRecord->record_date)) : '-' }}</p>
+                            <p><strong>Record Date:</strong> {{ $user->attendanceRecord ? ($user->attendanceRecord->record_date ? date('d M Y', strtotime($user->attendanceRecord->record_date)) : '-') : '-' }}</p>
                             <p><strong>Notes:</strong> {{ $user->attendanceRecord->notes ?? '-' }}</p>
                         </div>
                     </div>
