@@ -39,8 +39,8 @@
                                     <th>Regular</th>
                                     <th>CSS</th>
                                     <th>CGG</th>
-                                    <th>SPR Father</th>
-                                    <th>SPR Mother</th>
+                                    <th>CGG Father</th>
+                                    <th>CGG Mother</th>
                                     <th>SPR Sibling</th>
                                     <th colspan="3">Last Update</th>
                                     <th>Action</th>
@@ -127,13 +127,13 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>SPR Father</label>
+                                    <label>CGG Father</label>
                                     <input type="number" name="spr_father" class="form-control" value="{{ optional($student->attendanceRecord)->spr_father ?? 0 }}" min="0">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>SPR Mother</label>
+                                    <label>CGG Mother</label>
                                     <input type="number" name="spr_mother" class="form-control" value="{{ optional($student->attendanceRecord)->spr_mother ?? 0 }}" min="0">
                                 </div>
                             </div>

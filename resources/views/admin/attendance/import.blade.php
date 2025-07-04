@@ -101,7 +101,7 @@
                                     <li>CGG Attendance: Number of CGG class attendances</li>
                                     <li>Journal Entry: Numeric value for journal entries</li>
                                     <li>Permission: Numeric value for permissions</li>
-                                    <li>SPR Father/Mother/Sibling: Numeric values for SPR attendance</li>
+                                    <li>CGG Father/Mother/Sibling: Numeric values for SPR attendance</li>
                                 </ul>
 
                                 <div class="alert alert-info mt-4">
