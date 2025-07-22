@@ -95,11 +95,11 @@
         <form action="{{ route('student.login') }}" method="post">
             @csrf
             <div class="input-group">
-                <input type="text" name="username" class="form-control @error('username') is-invalid @enderror" 
-                       placeholder="Username" value="{{ old('username') }}" required autofocus>
+                <input type="text" name="nip" class="form-control @error('nip') is-invalid @enderror" 
+                       placeholder="NIP" value="{{ old('nip') }}" required autofocus>
                 
             </div>
-            @error('username')
+            @error('nip')
                 <span class="invalid-feedback d-block" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>

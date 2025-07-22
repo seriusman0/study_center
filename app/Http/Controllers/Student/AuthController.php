@@ -22,18 +22,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => 'required',
+            'nip' => 'required',
             'password' => 'required',
         ]);
 
-        if (Auth::guard('web')->attempt(['username' => $credentials['username'], 'password' => $credentials['password']])) {
+        if (Auth::guard('web')->attempt(['nip' => $credentials['nip'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
             return redirect()->intended(route('student.dashboard'));
         }
 
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ])->onlyInput('username');
+            'nip' => 'The provided credentials do not match our records.',
+        ])->onlyInput('nip');
     }
 
     /**
