@@ -41,7 +41,7 @@ class StudentDetailController extends Controller
             'gender' => 'required|in:male,female',
             'class' => 'required|integer|min:1',
             'batch' => 'required|integer|min:1',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:5120'
         ]);
 
         $student->update([

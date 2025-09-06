@@ -29,7 +29,7 @@ class PermissionRequestController extends Controller
             'class_type' => 'required|in:regular,css,cgg',
             'date' => 'required|date|after_or_equal:today',
             'reason' => 'required|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048'
+            'attachment' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240'
         ]);
 
         if ($request->hasFile('attachment')) {

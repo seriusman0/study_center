@@ -61,7 +61,7 @@
                         @error('attachment')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                        <small class="text-muted">Format yang diterima: PDF, JPG, JPEG, PNG (maks 2MB)</small>
+                        <small class="text-muted">Format yang diterima: PDF, JPG, JPEG, PNG (maks 10MB)</small>
                     </div>
 
                     <div class="d-flex justify-content-between">
