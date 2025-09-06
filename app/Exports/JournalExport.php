@@ -7,6 +7,7 @@ use App\Models\Journal;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class JournalExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize
 {
@@ -18,8 +19,8 @@ class JournalExport implements FromCollection, WithHeadings, WithMapping, Should
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $query = Journal::with('user')->orderBy('entry_date', 'desc');
@@ -27,7 +28,7 @@ class JournalExport implements FromCollection, WithHeadings, WithMapping, Should
         if ($this->userId) {
             $query->where('user_id', $this->userId);
         } else {
-            // Order by user name then by entry date when fetching all journals
+            // Urutkan berdasarkan nama siswa, lalu tanggal
             $query->join('users', 'journals.user_id', '=', 'users.id')
                   ->orderBy('users.nama', 'asc')
                   ->orderBy('journals.entry_date', 'desc')
@@ -42,6 +43,17 @@ class JournalExport implements FromCollection, WithHeadings, WithMapping, Should
      */
     public function headings(): array
     {
+        $checklistHeadings = [
+            'Mengawali Hari dengan Berdoa',
+            'Baca Alkitab (PL)',
+            'Baca Alkitab (PB)',
+            'Hadir Kelas SC',
+            'Hadir CSS',
+            'Hadir CGG',
+            'Merapikan Tempat Tidur',
+            'Menyapa Orang Tua',
+        ];
+
         if ($this->userId) {
             $user = User::find($this->userId);
             $studentName = $user ? $user->nama : 'Unknown';
@@ -50,23 +62,27 @@ class JournalExport implements FromCollection, WithHeadings, WithMapping, Should
                 ['Laporan Jurnal Mingguan'],
                 ['Nama Siswa: ' . $studentName],
                 [],
-                [
-                    'Tanggal',
-                    'Isi Jurnal',
-                    'Status',
-                ]
+                array_merge(
+                    [
+                        'Tanggal',
+                        'Status',
+                    ],
+                    $checklistHeadings
+                )
             ];
         }
 
         return [
             ['Laporan Jurnal Mingguan Semua Siswa'],
             [],
-            [
-                'Nama Siswa',
-                'Tanggal',
-                'Isi Jurnal',
-                'Status',
-            ]
+            array_merge(
+                [
+                    'Nama Siswa',
+                    'Tanggal',
+                    'Status',
+                ],
+                $checklistHeadings
+            )
         ];
     }
 
@@ -77,19 +93,35 @@ class JournalExport implements FromCollection, WithHeadings, WithMapping, Should
      */
     public function map($journal): array
     {
+        // Data checklist
+        $checklistData = [
+            $journal->mengawali_hari_dengan_berdoa ? 'Ya' : 'Tidak',
+            $journal->baca_alkitab_pl ? 'Ya' : 'Tidak',
+            $journal->baca_alkitab_pb ? 'Ya' : 'Tidak',
+            $journal->hadir_kelas_sc ? 'Ya' : 'Tidak',
+            $journal->hadir_css ? 'Ya' : 'Tidak',
+            $journal->hadir_cgg ? 'Ya' : 'Tidak',
+            $journal->merapikan_tempat_tidur ? 'Ya' : 'Tidak',
+            $journal->menyapa_orang_tua ? 'Ya' : 'Tidak',
+        ];
+
         if ($this->userId) {
-            return [
-                $journal->entry_date,
-                strip_tags($journal->content),
-                $journal->is_submitted ? 'Submitted' : 'Draft',
-            ];
+            return array_merge(
+                [
+                    $journal->entry_date,
+                    $journal->is_submitted ? 'Submitted' : 'Draft',
+                ],
+                $checklistData
+            );
         }
 
-        return [
-            $journal->user->nama,
-            $journal->entry_date,
-            strip_tags($journal->content),
-            $journal->is_submitted ? 'Submitted' : 'Draft',
-        ];
+        return array_merge(
+            [
+                $journal->user->nama,
+                $journal->entry_date,
+                $journal->is_submitted ? 'Submitted' : 'Draft',
+            ],
+            $checklistData
+        );
     }
 }
