@@ -57,11 +57,24 @@ class JournalController extends Controller
             'is_submitted' => 'boolean'
         ]);
 
-        $journal = new Journal($validated);
-        $journal->user_id = $user->id;
-        $journal->save();
+        // Check for existing entry
+        $existingJournal = Journal::where('user_id', $user->id)
+            ->where('entry_date', $validated['entry_date'])
+            ->first();
 
+        if ($existingJournal) {
+            // Update existing entry
+            $existingJournal->update($validated);
+            return redirect()->back()->with('success', 'Jurnal berhasil diperbarui');
+        } else {
+            // Create new entry
+            $journal = new Journal($validated);
+            $journal->user_id = $user->id;
+        $journal->save();
         return redirect()->back()->with('success', 'Jurnal berhasil ditambahkan');
+        }
+
+        // Removed redundant line
     }
 
     /**
