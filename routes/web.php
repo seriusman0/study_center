@@ -75,6 +75,8 @@ Route::prefix('admin')->group(function () {
         });
 
         // Permission Request Management Routes
+        Route::get('permissions/export', [App\Http\Controllers\Admin\PermissionRequestController::class, 'export'])
+            ->name('admin.permissions.export');
         Route::resource('permissions', App\Http\Controllers\Admin\PermissionRequestController::class)
             ->only(['index', 'show', 'update'])
             ->names('admin.permissions');
@@ -95,6 +97,6 @@ Route::prefix('admin')->group(function () {
         // Batch Management Routes
         
         // Class Management Routes
-        Route::resource('classes', App\Http\Controllers\Admin\ClassController::class)->names('admin.classes');
+        // Route::resource('classes', App\Http\Controllers\Admin\ClassController::class)->names('admin.classes');
     });
 });

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PermissionExport;
 use App\Http\Controllers\Controller;
 use App\Models\PermissionRequest;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PermissionRequestController extends Controller
 {
@@ -44,5 +46,28 @@ class PermissionRequestController extends Controller
         return redirect()
             ->route('admin.permissions.index')
             ->with('success', 'Permission request has been ' . $validated['status']);
+    }
+    
+    /**
+     * Export permission requests to Excel
+     */
+    public function export()
+    {
+        try {
+            $month = now()->month;
+            $year = now()->year;
+            $filename = 'laporan_izin_' . now()->format('F_Y') . '.xlsx';
+            
+            return Excel::download(new PermissionExport($month, $year), $filename);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Excel export error: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            // Return with error message
+            return redirect()
+                ->route('admin.permissions.index')
+                ->with('error', 'Gagal mengunduh laporan: ' . $e->getMessage());
+        }
     }
 }

@@ -16,10 +16,22 @@
                     </button>
                 </div>
             @endif
+            
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
 
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">All Permission Requests</h3>
+                    <a href="{{ route('admin.permissions.export') }}" class="btn btn-success">
+                        <i class="fas fa-file-excel mr-1"></i> Download Laporan Bulan Ini
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
