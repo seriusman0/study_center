@@ -77,6 +77,10 @@ Route::prefix('admin')->group(function () {
         // Permission Request Management Routes
         Route::get('permissions/export', [App\Http\Controllers\Admin\PermissionRequestController::class, 'export'])
             ->name('admin.permissions.export');
+        Route::get('permissions/export/previous', [App\Http\Controllers\Admin\PermissionRequestController::class, 'exportPrevious'])
+            ->name('admin.permissions.export.previous');
+        Route::get('permissions/export/custom', [App\Http\Controllers\Admin\PermissionRequestController::class, 'exportCustom'])
+            ->name('admin.permissions.export.custom');
         Route::resource('permissions', App\Http\Controllers\Admin\PermissionRequestController::class)
             ->only(['index', 'show', 'update'])
             ->names('admin.permissions');

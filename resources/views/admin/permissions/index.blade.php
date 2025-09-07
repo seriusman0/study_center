@@ -29,9 +29,17 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="card-title">All Permission Requests</h3>
-                    <a href="{{ route('admin.permissions.export') }}" class="btn btn-success">
-                        <i class="fas fa-file-excel mr-1"></i> Download Laporan Bulan Ini
-                    </a>
+                    <div>
+                        <a href="{{ route('admin.permissions.export.previous') }}" class="btn btn-info mr-2">
+                            <i class="fas fa-file-excel mr-1"></i> Download Laporan Bulan Lalu
+                        </a>
+                        <a href="{{ route('admin.permissions.export') }}" class="btn btn-success mr-2">
+                            <i class="fas fa-file-excel mr-1"></i> Download Laporan Bulan Ini
+                        </a>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#customMonthModal">
+                            <i class="fas fa-calendar-alt mr-1"></i> Pilih Bulan Lain
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -86,6 +94,60 @@
 </div>
 </div>
 
-
+<!-- Custom Month Modal -->
+<div class="modal fade" id="customMonthModal" tabindex="-1" role="dialog" aria-labelledby="customMonthModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customMonthModalLabel">Pilih Bulan dan Tahun</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('admin.permissions.export.custom') }}" method="GET">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="month">Bulan</label>
+                        <select class="form-control" id="month" name="month" required>
+                            @php
+                                $currentMonth = now()->month;
+                            @endphp
+                            <option value="1" {{ $currentMonth == 1 ? 'selected' : '' }}>Januari</option>
+                            <option value="2" {{ $currentMonth == 2 ? 'selected' : '' }}>Februari</option>
+                            <option value="3" {{ $currentMonth == 3 ? 'selected' : '' }}>Maret</option>
+                            <option value="4" {{ $currentMonth == 4 ? 'selected' : '' }}>April</option>
+                            <option value="5" {{ $currentMonth == 5 ? 'selected' : '' }}>Mei</option>
+                            <option value="6" {{ $currentMonth == 6 ? 'selected' : '' }}>Juni</option>
+                            <option value="7" {{ $currentMonth == 7 ? 'selected' : '' }}>Juli</option>
+                            <option value="8" {{ $currentMonth == 8 ? 'selected' : '' }}>Agustus</option>
+                            <option value="9" {{ $currentMonth == 9 ? 'selected' : '' }}>September</option>
+                            <option value="10" {{ $currentMonth == 10 ? 'selected' : '' }}>Oktober</option>
+                            <option value="11" {{ $currentMonth == 11 ? 'selected' : '' }}>November</option>
+                            <option value="12" {{ $currentMonth == 12 ? 'selected' : '' }}>Desember</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Tahun</label>
+                        <select class="form-control" id="year" name="year" required>
+                            @php
+                                $currentYear = now()->year;
+                                $startYear = 2023; // Adjust this to your needs
+                            @endphp
+                            @for ($year = $currentYear; $year >= $startYear; $year--)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-download mr-1"></i> Download Laporan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection

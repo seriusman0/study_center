@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Exports\PermissionExport;
 use App\Http\Controllers\Controller;
 use App\Models\PermissionRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -62,6 +63,63 @@ class PermissionRequestController extends Controller
         } catch (\Exception $e) {
             // Log the error
             \Log::error('Excel export error: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            // Return with error message
+            return redirect()
+                ->route('admin.permissions.index')
+                ->with('error', 'Gagal mengunduh laporan: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Export permission requests from the previous month to Excel
+     */
+    public function exportPrevious()
+    {
+        try {
+            // Get previous month
+            $date = now()->subMonth();
+            $month = $date->month;
+            $year = $date->year;
+            $filename = 'laporan_izin_' . $date->format('F_Y') . '.xlsx';
+            
+            return Excel::download(new PermissionExport($month, $year), $filename);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Excel export error (previous month): ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+            
+            // Return with error message
+            return redirect()
+                ->route('admin.permissions.index')
+                ->with('error', 'Gagal mengunduh laporan bulan lalu: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Export permission requests from a custom month and year to Excel
+     */
+    public function exportCustom(Request $request)
+    {
+        try {
+            $month = $request->input('month');
+            $year = $request->input('year');
+            
+            if (!$month || !$year) {
+                return redirect()
+                    ->route('admin.permissions.index')
+                    ->with('error', 'Bulan dan tahun harus dipilih');
+            }
+            
+            $date = Carbon::createFromDate($year, $month, 1);
+            $monthName = $date->translatedFormat('F');
+            $filename = 'laporan_izin_' . $monthName . '_' . $year . '.xlsx';
+            
+            return Excel::download(new PermissionExport($month, $year), $filename);
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Excel export error (custom month): ' . $e->getMessage());
             \Log::error($e->getTraceAsString());
             
             // Return with error message
