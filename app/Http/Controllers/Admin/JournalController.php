@@ -144,4 +144,21 @@ class JournalController extends Controller
     {
         return view('admin.journals.statistics');
     }
+    
+    /**
+     * Export attendance and payment report
+     */
+    public function exportAttendancePayment(Request $request)
+    {
+        $classRange = $request->input('class_range', '7-9');
+        $selectedPeriod = $request->input('period', now()->format('Y-m'));
+        $totalClasses = $request->input('total_classes', 3);
+        
+        $filename = "rekap_pembayaran_kehadiran_" . $selectedPeriod . ".xlsx";
+        
+        return Excel::download(
+            new AttendancePaymentExport($classRange, $selectedPeriod, $totalClasses), 
+            $filename
+        );
+    }
 }

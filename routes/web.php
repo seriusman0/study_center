@@ -88,6 +88,8 @@ Route::prefix('admin')->group(function () {
         // Journal Management Routes
         Route::get('journals/download-all', [App\Http\Controllers\Admin\JournalController::class, 'downloadAll'])
             ->name('admin.journals.download-all');
+        Route::get('journals/export-attendance-payment', [App\Http\Controllers\Admin\JournalController::class, 'exportAttendancePayment'])
+            ->name('admin.journals.export-attendance-payment');
         Route::get('journals/statistics', [App\Http\Controllers\Admin\JournalController::class, 'statistics'])
             ->name('admin.journals.statistics');
         Route::get('journals/entry/{journal}', [App\Http\Controllers\Admin\JournalController::class, 'entryShow'])

@@ -6,8 +6,11 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\User;
 use App\Models\PaymentProof;
+use App\Exports\AttendancePaymentExport;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JournalStatistics extends Component
 {
@@ -16,6 +19,7 @@ class JournalStatistics extends Component
     public $classRange = '7-9'; // Default value
     public $totalClasses = 3; // Default value
     public $selectedPeriod; // For storing selected period
+    public $exportStudentId = null; // For selecting student to export
     
     // Upload related properties
     public $selectedStudent = null;
@@ -77,6 +81,73 @@ class JournalStatistics extends Component
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to upload payment proof. Please try again.');
         }
+    }
+    
+    /**
+     * Export attendance and payment report as Excel
+     * If exportStudentId is set, exports for that specific student
+     * Otherwise exports for all students in the filter
+     */
+    public function exportAttendancePayment()
+    {
+        try {
+            if ($this->exportStudentId) {
+                // Export for specific student
+                $student = User::find($this->exportStudentId);
+                $studentName = $student ? Str::slug($student->nama) : 'student';
+                $filename = "rekap_pembayaran_{$studentName}_{$this->selectedPeriod}.xlsx";
+                
+                return Excel::download(
+                    new AttendancePaymentExport(
+                        $this->classRange,
+                        $this->selectedPeriod,
+                        $this->totalClasses,
+                        $this->exportStudentId
+                    ), 
+                    $filename
+                );
+            } else {
+                // Export for all filtered students
+                $filename = "rekap_pembayaran_kehadiran_" . $this->selectedPeriod . ".xlsx";
+                
+                return Excel::download(
+                    new AttendancePaymentExport(
+                        $this->classRange,
+                        $this->selectedPeriod,
+                        $this->totalClasses
+                    ), 
+                    $filename
+                );
+            }
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to export: ' . $e->getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Get list of students for dropdown selection
+     */
+    public function getStudentsForDropdownProperty()
+    {
+        // Parse class range
+        $range = explode('-', $this->classRange);
+        $minClass = (int) $range[0];
+        $maxClass = (int) $range[1];
+
+        return User::with('studentDetail')
+            ->whereHas('studentDetail', function($query) use ($minClass, $maxClass) {
+                $query->whereBetween('class', [$minClass, $maxClass])
+                      ->where('is_active', true);
+            })
+            ->orderBy('nama')
+            ->get()
+            ->map(function($student) {
+                return [
+                    'id' => $student->id,
+                    'nama' => $student->nama . ' (BATCH ' . ($student->studentDetail->batch ?? 'N/A') . ')'
+                ];
+            });
     }
 
     public function getPeriodsProperty()
@@ -213,7 +284,8 @@ class JournalStatistics extends Component
         return view('livewire.journal-statistics', [
             'students' => $students,
             'overallStats' => $overallStats,
-            'periods' => $this->periods
+            'periods' => $this->periods,
+            'studentsForDropdown' => $this->studentsForDropdown
         ]);
     }
 }

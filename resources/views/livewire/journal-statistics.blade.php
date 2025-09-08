@@ -123,10 +123,35 @@
             <h3 class="card-title mb-0">
                 <i class="fas fa-table mr-2"></i> Detailed Student Statistics
             </h3>
-            <div>
-                <a href="{{ route('admin.journals.download-all') }}" class="btn btn-success">
-                    <i class="fas fa-download mr-1"></i> Export Report
-                </a>
+            
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="exportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-file-export mr-1"></i> Export Data
+                </button>
+                <div class="dropdown-menu dropdown-menu-right p-3" style="width: 300px;" aria-labelledby="exportDropdown">
+                    <h6 class="dropdown-header text-primary"><i class="fas fa-file-excel mr-1"></i> Export Options</h6>
+                    <div class="form-group mt-2">
+                        <label for="exportStudentSelect" class="font-weight-bold">Select Student:</label>
+                        <select wire:model.live="exportStudentId" id="exportStudentSelect" class="form-control">
+                            <option value="">-- All Students --</option>
+                            @foreach($studentsForDropdown as $student)
+                                <option value="{{ $student['id'] }}">{{ $student['nama'] }}</option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">
+                            Choose a specific student or export data for all students in the current filter
+                        </small>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ route('admin.journals.download-all') }}" class="btn btn-success btn-sm">
+                            <i class="fas fa-book mr-1"></i> Journal Report
+                        </a>
+                        <button wire:click="exportAttendancePayment" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-invoice-dollar mr-1"></i> SPP & Kehadiran
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
@@ -187,7 +212,7 @@
                                                 <span class="text-muted">-</span>
                                             @endif
                                         </div>
-                                        <div class="ml-2">
+                                        <div class="ml-2 d-flex">
                                             @if($student['payment_proof'])
                                                 <a href="{{ asset('storage/' . $student['payment_proof']->file_path) }}" 
                                                 target="_blank" 
@@ -197,9 +222,14 @@
                                                 </a>
                                             @endif
                                             <button wire:click="openUploadModal({{ $student['id'] }})" 
-                                                    class="btn btn-sm btn-primary" 
+                                                    class="btn btn-sm btn-primary mr-1" 
                                                     title="Upload Payment Proof">
                                                 <i class="fas fa-upload"></i>
+                                            </button>
+                                            <button wire:click="exportStudentAttendancePayment({{ $student['id'] }})" 
+                                                    class="btn btn-sm btn-success" 
+                                                    title="Export SPP & Kehadiran">
+                                                <i class="fas fa-file-excel"></i>
                                             </button>
                                         </div>
                                     </div>
