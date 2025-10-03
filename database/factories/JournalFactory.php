@@ -27,7 +27,7 @@ class JournalFactory extends Factory
             'merapikan_tempat_tidur' => $this->faker->boolean(95),
             'menyapa_orang_tua' => $this->faker->boolean(90),
             'is_submitted' => $submissionChance,
-            'selfie_image' => null,
+            'parent_signature' => $submissionChance ? 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==' : null,
             'attachments' => null,
             'status' => $submissionChance ? 'submitted' : 'draft',
             'submitted_at' => $submittedAt,

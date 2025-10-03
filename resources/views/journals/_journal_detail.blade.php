@@ -90,13 +90,26 @@
         </div>
     </div>
 
-    <!-- Selfie Image -->
-    <div class="mb-4">
-        <h5>Selfie with Parents</h5>
-        <img src="{{ Storage::url($journal->selfie_image) }}" 
-             alt="Selfie with Parents" 
-             class="img-fluid rounded" 
-             style="max-width: 400px;">
+    <!-- Parent Signature -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Tanda Tangan Orang Tua</h5>
+        </div>
+        <div class="card-body">
+            @if($journal->parent_signature)
+                <div class="text-center">
+                    <img src="{{ $journal->parent_signature }}" 
+                         alt="Tanda Tangan Orang Tua" 
+                         class="img-fluid border rounded p-2" 
+                         style="max-width: 400px; background-color: #f8f9fa;">
+                </div>
+            @else
+                <div class="text-center text-muted">
+                    <i class="fas fa-signature fa-2x mb-2"></i>
+                    <p>Tanda tangan tidak tersedia</p>
+                </div>
+            @endif
+        </div>
     </div>
 
     <!-- Submission Details -->
