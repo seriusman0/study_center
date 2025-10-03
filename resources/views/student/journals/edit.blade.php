@@ -127,49 +127,50 @@
                             </div>
                         </div>
 
-                        <!-- Selfie with Parents -->
-                        <div class="mb-4">
-                            <label class="form-label">Selfie dengan Orang Tua *</label>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <!-- File Upload -->
-                                    <div class="mb-3">
-                                        <input type="file" name="selfie_image" id="selfie_image" class="form-control @error('selfie_image') is-invalid @enderror" accept="image/*" capture="user">
-                                        @error('selfie_image')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
+                        <!-- Parent Signature -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Tanda Tangan Orang Tua *</h5>
+                                <small class="text-muted">Silakan tanda tangan pada area di bawah ini</small>
+                            </div>
+                            <div class="card-body">
+                                <!-- Signature Pad -->
+                                <div class="signature-container mb-3">
+                                    <canvas id="signature-pad" class="signature-pad"></canvas>
                                 </div>
-                                <div class="col-md-6">
-                                    <!-- Camera Capture -->
-                                    <button type="button" class="btn btn-secondary" id="openCamera">
-                                        <i class="fas fa-camera"></i> Ambil Foto
+                                
+                                <!-- Signature Controls -->
+                                <div class="d-flex gap-2 mb-3">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="clear-signature">
+                                        <i class="fas fa-eraser"></i> Hapus
+                                    </button>
+                                    <button type="button" class="btn btn-info btn-sm" id="undo-signature">
+                                        <i class="fas fa-undo"></i> Batal
                                     </button>
                                 </div>
-                            </div>
-                            <!-- Preview -->
-                            <div id="imagePreview" class="mt-3" style="{{ $journal->selfie_image ? '' : 'display: none;' }}">
-                                <img id="preview" src="{{ $journal->selfie_image ? asset('storage/' . $journal->selfie_image) : '#' }}" alt="Preview" style="max-width: 300px; max-height: 300px;" class="img-thumbnail">
-                            </div>
-                        </div>
-
-                        <!-- Camera Modal -->
-                        <div class="modal fade" id="cameraModal" tabindex="-1">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Ambil Foto</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <video id="video" width="100%" autoplay></video>
-                                        <canvas id="canvas" style="display:none;"></canvas>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                        <button type="button" class="btn btn-primary" id="capture">Ambil</button>
-                                    </div>
+                                
+                                <!-- Hidden input untuk signature data -->
+                                <input type="hidden" name="parent_signature" id="parent_signature" value="{{ old('parent_signature', $journal->parent_signature) }}" required>
+                                
+                                <!-- Validation error -->
+                                @error('parent_signature')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                                
+                                <!-- Status indicator -->
+                                <div id="signature-status" class="text-muted">
+                                    <i class="fas fa-info-circle"></i> Belum ada tanda tangan
                                 </div>
+                                
+                                <!-- Existing signature preview -->
+                                @if($journal->parent_signature)
+                                    <div class="mt-3">
+                                        <label class="form-label">Tanda Tangan Saat Ini:</label>
+                                        <div class="existing-signature">
+                                            <img src="{{ $journal->parent_signature }}" alt="Tanda Tangan Orang Tua" class="img-thumbnail" style="max-width: 300px;">
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -183,3 +184,251 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+<style>
+    .signature-container {
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+    }
+    
+    .signature-pad {
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        background-color: white;
+        cursor: crosshair;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 600px;
+        height: 200px;
+    }
+    
+    .signature-container:hover {
+        border-color: #007bff;
+        background-color: #e7f1ff;
+    }
+    
+    .signature-container::before {
+        content: "Area Tanda Tangan";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #6c757d;
+        font-size: 14px;
+        pointer-events: none;
+        z-index: 1;
+    }
+    
+    .signature-pad.signed + .signature-container::before {
+        display: none;
+    }
+    
+    #signature-status.signed {
+        color: #28a745;
+    }
+    
+    #signature-status.empty {
+        color: #6c757d;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    const clearBtn = document.getElementById('clear-signature');
+    const undoBtn = document.getElementById('undo-signature');
+    const hiddenInput = document.getElementById('parent_signature');
+    const statusEl = document.getElementById('signature-status');
+    const form = document.getElementById('journalForm');
+    
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let strokes = []; // Array to store strokes for undo functionality
+    let currentStroke = [];
+    
+    // Set canvas size
+    function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        
+        // Set drawing styles
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        // Load existing signature if available
+        loadExistingSignature();
+    }
+    
+    // Initialize canvas
+    resizeCanvas();
+    
+    // Resize canvas on window resize
+    window.addEventListener('resize', resizeCanvas);
+    
+    function loadExistingSignature() {
+        if (hiddenInput.value) {
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                updateStatus();
+            };
+            img.src = hiddenInput.value;
+        }
+    }
+    
+    function startDrawing(e) {
+        isDrawing = true;
+        currentStroke = [];
+        [lastX, lastY] = getCoordinates(e);
+        currentStroke.push({x: lastX, y: lastY});
+    }
+    
+    function draw(e) {
+        if (!isDrawing) return;
+        
+        const [currentX, currentY] = getCoordinates(e);
+        
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(currentX, currentY);
+        ctx.stroke();
+        
+        currentStroke.push({x: currentX, y: currentY});
+        [lastX, lastY] = [currentX, currentY];
+    }
+    
+    function stopDrawing() {
+        if (!isDrawing) return;
+        isDrawing = false;
+        
+        // Save current stroke
+        if (currentStroke.length > 1) {
+            strokes.push([...currentStroke]);
+            updateSignatureData();
+            updateStatus();
+        }
+    }
+    
+    function getCoordinates(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        return [
+            clientX - rect.left,
+            clientY - rect.top
+        ];
+    }
+    
+    function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        strokes = [];
+        hiddenInput.value = '';
+        updateStatus();
+    }
+    
+    function undoStroke() {
+        if (strokes.length > 0) {
+            strokes.pop();
+            redrawCanvas();
+            updateSignatureData();
+            updateStatus();
+        }
+    }
+    
+    function redrawCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        strokes.forEach(stroke => {
+            if (stroke.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(stroke[0].x, stroke[0].y);
+                
+                for (let i = 1; i < stroke.length; i++) {
+                    ctx.lineTo(stroke[i].x, stroke[i].y);
+                }
+                ctx.stroke();
+            }
+        });
+    }
+    
+    function updateSignatureData() {
+        if (strokes.length > 0 || isCanvasNotEmpty()) {
+            const dataURL = canvas.toDataURL('image/png');
+            hiddenInput.value = dataURL;
+        } else {
+            hiddenInput.value = '';
+        }
+    }
+    
+    function isCanvasNotEmpty() {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        return imageData.data.some(channel => channel !== 0);
+    }
+    
+    function updateStatus() {
+        if (strokes.length > 0 || isCanvasNotEmpty()) {
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Tanda tangan tersimpan';
+            statusEl.className = 'text-success';
+            canvas.classList.add('signed');
+        } else {
+            statusEl.innerHTML = '<i class="fas fa-info-circle"></i> Belum ada tanda tangan';
+            statusEl.className = 'text-muted';
+            canvas.classList.remove('signed');
+        }
+    }
+    
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    // Touch events for mobile
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        startDrawing(e);
+    });
+    
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        draw(e);
+    });
+    
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        stopDrawing();
+    });
+    
+    // Button events
+    clearBtn.addEventListener('click', clearSignature);
+    undoBtn.addEventListener('click', undoStroke);
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        if (!hiddenInput.value) {
+            e.preventDefault();
+            alert('Silakan buat tanda tangan orang tua terlebih dahulu!');
+            canvas.focus();
+            return false;
+        }
+    });
+    
+    // Initialize status
+    updateStatus();
+});
+</script>
+@endpush
