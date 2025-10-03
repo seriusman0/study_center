@@ -21,7 +21,7 @@ class Journal extends Model
         'hadir_cgg',
         'merapikan_tempat_tidur',
         'menyapa_orang_tua',
-        'selfie_image'
+        'parent_signature'
     ];
 
     protected $casts = [

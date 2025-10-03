@@ -53,14 +53,10 @@ class JournalController extends Controller
             'hadir_cgg' => 'required|boolean',
             'merapikan_tempat_tidur' => 'required|boolean',
             'menyapa_orang_tua' => 'required|boolean',
-            'selfie_image' => 'required|image|max:5120' // 5MB max
+            'parent_signature' => 'required|string'
         ]);
 
-        // Handle selfie image upload
-        if ($request->hasFile('selfie_image')) {
-            $path = $request->file('selfie_image')->store('journals/selfies', 'public');
-            $validated['selfie_image'] = $path;
-        }
+        // Parent signature is already in validated data as base64 string
 
         $journal = new Journal($validated);
         $journal->user_id = auth()->id();
@@ -106,14 +102,10 @@ class JournalController extends Controller
             'hadir_cgg' => 'required|boolean',
             'merapikan_tempat_tidur' => 'required|boolean',
             'menyapa_orang_tua' => 'required|boolean',
-            'selfie_image' => 'nullable|image|max:5120' // 5MB max
+            'parent_signature' => 'nullable|string'
         ]);
 
-        // Handle selfie image upload if present
-        if ($request->hasFile('selfie_image')) {
-            $path = $request->file('selfie_image')->store('journals/selfies', 'public');
-            $validated['selfie_image'] = $path;
-        }
+        // Parent signature is handled in validated data
 
         $journal->update($validated);
 
@@ -128,10 +120,7 @@ class JournalController extends Controller
     {
         $this->authorize('delete', $journal);
 
-        // Delete selfie image file if exists
-        if ($journal->selfie_image && Storage::disk('public')->exists($journal->selfie_image)) {
-            Storage::disk('public')->delete($journal->selfie_image);
-        }
+        // Parent signature is stored as base64, no file deletion needed
 
         $journal->delete();
 
@@ -140,24 +129,13 @@ class JournalController extends Controller
     }
 
     /**
-     * Store base64 image from camera capture
+     * Store signature from signature pad (no longer needed - kept for backward compatibility)
      */
     public function storeImage(Request $request)
     {
-        $request->validate([
-            'image' => 'required|string'
-        ]);
-
-        // Decode base64 image
-        $image = str_replace('data:image/png;base64,', '', $request->image);
-        $image = str_replace(' ', '+', $image);
-        $imageName = 'selfie_' . time() . '.png';
-        
-        // Store the image
-        Storage::disk('public')->put('journals/selfies/' . $imageName, base64_decode($image));
-        
+        // This method is no longer needed as signature is now handled directly in the form
         return response()->json([
-            'path' => 'journals/selfies/' . $imageName
-        ]);
+            'message' => 'Method deprecated - signature handled in form'
+        ], 404);
     }
 }
