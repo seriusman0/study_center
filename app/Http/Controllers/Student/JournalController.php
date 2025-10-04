@@ -94,7 +94,7 @@ class JournalController extends Controller
         ]);
         
         // Check if user owns this journal
-        if ($journal->user_id !== $currentUser->id) {
+        if ($journal->user_id != $currentUser->id) {
             \Log::warning('Unauthorized journal access attempt', [
                 'journal_id' => $journal->id,
                 'journal_owner_id' => $journal->user_id,
@@ -124,7 +124,7 @@ class JournalController extends Controller
     public function edit(Journal $journal)
     {
         // Check if user owns this journal
-        if ($journal->user_id !== auth()->id()) {
+        if ($journal->user_id != auth()->id()) {
             return redirect()->route('student.journals.index')
                 ->with('error', 'Anda tidak dapat mengedit jurnal milik siswa lain.');
         }
@@ -138,7 +138,7 @@ class JournalController extends Controller
     public function update(Request $request, Journal $journal)
     {
         // Check if user owns this journal
-        if ($journal->user_id !== auth()->id()) {
+        if ($journal->user_id != auth()->id()) {
             return redirect()->route('student.journals.index')
                 ->with('error', 'Anda tidak dapat mengupdate jurnal milik siswa lain.');
         }
