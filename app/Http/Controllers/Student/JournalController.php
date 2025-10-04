@@ -15,7 +15,14 @@ class JournalController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->authorizeResource(Journal::class, 'journal');
+        // Added middleware to ensure only authenticated students can access
+        $this->middleware(function ($request, $next) {
+            if (!auth()->check()) {
+                return redirect()->route('login');
+            }
+            return $next($request);
+        });
+        // Removed authorizeResource to use manual authorization checks
     }
     /**
      * Display a listing of the journals
@@ -73,7 +80,41 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
-        $this->authorize('view', $journal);
+        $currentUser = auth()->user();
+        
+        // Debug logging
+        \Log::info('Journal access attempt', [
+            'journal_id' => $journal->id,
+            'journal_user_id' => $journal->user_id,
+            'journal_owner' => $journal->user->nama ?? 'Unknown',
+            'current_user_id' => $currentUser->id,
+            'current_user_name' => $currentUser->nama ?? 'Unknown',
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent()
+        ]);
+        
+        // Check if user owns this journal
+        if ($journal->user_id !== $currentUser->id) {
+            \Log::warning('Unauthorized journal access attempt', [
+                'journal_id' => $journal->id,
+                'journal_owner_id' => $journal->user_id,
+                'journal_owner_name' => $journal->user->nama ?? 'Unknown',
+                'current_user_id' => $currentUser->id,
+                'current_user_name' => $currentUser->nama,
+                'ip_address' => request()->ip()
+            ]);
+            
+            // User-friendly error message
+            return redirect()->route('student.journals.index')
+                ->with('error', 'Anda tidak memiliki akses untuk melihat jurnal ini. Jurnal tersebut milik siswa lain.');
+        }
+        
+        \Log::info('Journal access granted', [
+            'journal_id' => $journal->id,
+            'user_id' => $currentUser->id,
+            'user_name' => $currentUser->nama
+        ]);
+        
         return view('student.journals.show', compact('journal'));
     }
 
@@ -82,7 +123,12 @@ class JournalController extends Controller
      */
     public function edit(Journal $journal)
     {
-        $this->authorize('update', $journal);
+        // Check if user owns this journal
+        if ($journal->user_id !== auth()->id()) {
+            return redirect()->route('student.journals.index')
+                ->with('error', 'Anda tidak dapat mengedit jurnal milik siswa lain.');
+        }
+        
         return view('student.journals.edit', compact('journal'));
     }
 
@@ -91,7 +137,11 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
-        $this->authorize('update', $journal);
+        // Check if user owns this journal
+        if ($journal->user_id !== auth()->id()) {
+            return redirect()->route('student.journals.index')
+                ->with('error', 'Anda tidak dapat mengupdate jurnal milik siswa lain.');
+        }
 
         $validated = $request->validate([
             'mengawali_hari_dengan_berdoa' => 'required|boolean',
@@ -118,7 +168,11 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
-        $this->authorize('delete', $journal);
+        // Check if user owns this journal
+        if ($journal->user_id !== auth()->id()) {
+            return redirect()->route('student.journals.index')
+                ->with('error', 'Anda tidak dapat menghapus jurnal milik siswa lain.');
+        }
 
         // Parent signature is stored as base64, no file deletion needed
 
