@@ -169,7 +169,7 @@ class JournalController extends Controller
     public function destroy(Journal $journal)
     {
         // Check if user owns this journal
-        if ($journal->user_id !== auth()->id()) {
+        if ($journal->user_id != auth()->id()) {
             return redirect()->route('student.journals.index')
                 ->with('error', 'Anda tidak dapat menghapus jurnal milik siswa lain.');
         }

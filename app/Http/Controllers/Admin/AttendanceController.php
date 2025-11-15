@@ -45,7 +45,7 @@ class AttendanceController extends Controller
 
         // Set headers
         $headers = [
-            'NO', 'ID', 'NAME', 'RECORD DATE',
+            'NO', 'NIP', 'NAME', 'RECORD DATE',
             'HADIR REG', 'HADIR CSS', 'HADIR CGG',
             'SPR FATHER', 'SPR MOTHER', 'SPR SIBLING'
         ];
