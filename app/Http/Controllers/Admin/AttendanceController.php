@@ -68,7 +68,7 @@ class AttendanceController extends Controller
             
             // Set student data
             $sheet->setCellValue('A' . $rowIndex, $index + 1);    // NO
-            $sheet->setCellValue('B' . $rowIndex, $student->id);   // ID
+            $sheet->setCellValue('B' . $rowIndex, $student->nip);   // NIP
             $sheet->setCellValue('C' . $rowIndex, $student->nama); // NAME
             $sheet->setCellValue('D' . $rowIndex, date('Y-m-d')); // RECORD DATE (today's date)
             
