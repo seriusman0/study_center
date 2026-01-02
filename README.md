@@ -63,6 +63,3 @@ If you discover any security issues, please contact the repository owner directl
 
 This project is open-source and licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
----
-
-Feel free to customize this README further to suit specific details about your project, such as additional features, screenshots, or API documentation. Let me know if there are any other specifics you'd like to include!
