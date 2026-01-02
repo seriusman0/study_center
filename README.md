@@ -1,6 +1,4 @@
-Here's a customized README.md for your "Study Center" project based on the information available:
 
----
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://studycenter.or.id/wp-content/uploads/2017/03/infogram-banner-sc1.jpg" width="400" alt="SC Logo"></a></p>
 
